@@ -16,7 +16,14 @@
   <body>
     <a-scene arjs='detectionMode: mono_and_matrix; matrixCodeType: 5x5;'>
     <a-marker type="barcode" value="5">
-        <a-text value="Hello from 5x5!" rotation="-90 0 0" position="0 0.5 0" align="center" color="blue"></a-text>
+        <a-image 
+            src="https://agguimangan.webcapstone.com/img/gallery-img/4/10.jpg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" 
+            position="0 0.5 0" 
+            width="1" 
+            height="1"
+            opacity="0"
+            animation="property: opacity; to: 1; dur: 1000; easing: easeInSine; delay: 500"
+        ></a-image>
     </a-marker>
     <a-entity camera></a-entity>
     </a-scene>

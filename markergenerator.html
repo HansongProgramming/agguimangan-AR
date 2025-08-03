@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>ARToolKit 5x5 Barcode Marker Generator</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 20px; }
+    canvas { border: 1px solid black; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h2>ARToolKit 5×5 Marker Generator</h2>
+  <label>Marker Code (0–33554431): </label>
+  <input type="number" id="codeInput" value="5" min="0" max="33554431">
+  <br>
+  <label>Marker Pixel Size: </label>
+  <input type="number" id="pxSize" value="226">
+  <br><br>
+  <button onclick="generateMarker()">Generate Marker</button>
+  <br>
+  <canvas id="markerCanvas" width="226" height="226"></canvas>
+
+  <script>
+function generateMarker() {
+  const code = parseInt(document.getElementById("codeInput").value);
+  const size = parseInt(document.getElementById("pxSize").value);
+  const canvas = document.getElementById("markerCanvas");
+  canvas.width = canvas.height = size;
+  const ctx = canvas.getContext("2d");
+
+  const matrixSize = 5;
+  const borderRatio = 0.25;
+  const borderPx = size * borderRatio;
+  const cellSize = (size - borderPx * 2) / matrixSize;
+
+  // Clear canvas
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, size, size);
+
+  // Draw black border
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, size, size);
+
+  // Draw white inner area (quiet zone)
+  ctx.fillStyle = "white";
+  ctx.fillRect(borderPx, borderPx, size - borderPx * 2, size - borderPx * 2);
+
+  // Convert code to 25-bit binary string (MSB first)
+  let bin = code.toString(2).padStart(25, '0');
+
+  for (let bitIdx = 0; bitIdx < 25; bitIdx++) {
+    const bit = bin[bitIdx];
+
+    // Determine row: bottom row (0) to top row (4)
+    const row = Math.floor(bitIdx / 5);
+    const col = bitIdx % 5;
+
+    // Flip vertical placement: canvas Y grows down, so we need to invert rows
+    const y = 4 - row;
+
+    ctx.fillStyle = bit === '1' ? "black" : "white";
+    ctx.fillRect(
+      borderPx + col * cellSize,
+      borderPx + y * cellSize,
+      cellSize,
+      cellSize
+    );
+  }
+}
+
+
+  </script>
+</body>
+</html>
