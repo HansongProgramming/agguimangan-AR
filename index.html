@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>AR.js Hello World</title>
+    <title>AR.js Adaptive Image</title>
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
     <style>
-      body, html {
+      html, body {
         margin: 0;
+        padding: 0;
         overflow: hidden;
         width: 100%;
         height: 100%;
@@ -14,19 +15,34 @@
     </style>
   </head>
   <body>
-    <a-scene arjs='detectionMode: mono_and_matrix; matrixCodeType: 5x5;'>
-    <a-marker type="barcode" value="5">
-        <a-image 
-            src="https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/halo-halo.png"
-            position="0 0.5 0" 
-            rotation="-90 0 0"
-            width="16" 
-            height="9"
-            opacity="0"
-            animation="property: opacity; to: 1; dur: 1000; easing: easeInSine; delay: 500"
-        ></a-image>
-    </a-marker>
-    <a-entity camera></a-entity>
+    <a-scene embedded arjs="detectionMode: mono_and_matrix; matrixCodeType: 5x5;">
+      <a-marker type="barcode" value="5">
+        <a-image id="dynamic-img"
+                 src=""
+                 position="0 0.5 0"
+                 rotation="-90 0 0"
+                 opacity="0"
+                 animation="property: opacity; to: 1; dur: 1000; easing: easeInSine; delay: 500">
+        </a-image>
+      </a-marker>
+      <a-entity camera></a-entity>
     </a-scene>
+
+    <script>
+      const imageURL = "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/halo-halo.png";
+
+      const img = new Image();
+      img.src = imageURL;
+      img.onload = function () {
+        const aspectRatio = img.naturalWidth / img.naturalHeight;
+        const baseHeight = 0.5;
+        const baseWidth = aspectRatio * baseHeight;
+
+        const aImage = document.getElementById('dynamic-img');
+        aImage.setAttribute('src', imageURL);
+        aImage.setAttribute('width', baseWidth);
+        aImage.setAttribute('height', baseHeight);
+      };
+    </script>
   </body>
 </html>
