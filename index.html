@@ -20,7 +20,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.9);
+        background: rgba(0, 0, 0, 0.95);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -52,16 +52,15 @@
       <button onclick="startAR()">Start</button>
     </div>
 
-    <!-- AR Scene (hidden initially) -->
+    <!-- AR Scene -->
     <a-scene 
-      id="scene"
       embedded 
       vr-mode-ui="enabled: false"
       arjs="detectionMode: mono_and_matrix; matrixCodeType: 5x5;"
-      style="display: none;"
     >
       <!-- Marker 1 -->
-      <a-marker type="barcode" value="1">
+      <a-marker type="barcode" value="1"
+        smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
         <a-image id="img-1"
                  position="0 0.5 0"
                  rotation="-90 0 0"
@@ -71,7 +70,8 @@
       </a-marker>
 
       <!-- Marker 2 -->
-      <a-marker type="barcode" value="2">
+      <a-marker type="barcode" value="2"
+        smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
         <a-image id="img-2"
                  position="0 0.5 0"
                  rotation="-90 0 0"
@@ -81,7 +81,8 @@
       </a-marker>
 
       <!-- Marker 3 -->
-      <a-marker type="barcode" value="5">
+      <a-marker type="barcode" value="5"
+        smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
         <a-image id="img-3"
                  position="0 0.5 0"
                  rotation="-90 0 0"
@@ -91,7 +92,8 @@
       </a-marker>
 
       <!-- Marker 4 -->
-      <a-marker type="barcode" value="4">
+      <a-marker type="barcode" value="4"
+        smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
         <a-image id="img-4"
                  position="0 0.5 0"
                  rotation="-90 0 0"
@@ -106,9 +108,8 @@
     <!-- Script Section -->
     <script>
       function startAR() {
-        // Hide overlay, show AR scene
-        document.getElementById('start-overlay').style.display = 'none';
-        document.getElementById('scene').style.display = 'block';
+        // Remove the overlay, which unblocks camera interaction on iOS
+        document.getElementById('start-overlay').remove();
 
         // Preload and scale images
         const imageMap = {
@@ -134,7 +135,7 @@
         });
       }
 
-      // Optional: camera access fallback
+      // Optional fallback alert
       navigator.mediaDevices?.getUserMedia?.({ video: true }).catch(() => {
         alert("Camera access denied or unavailable. Use a secure browser and allow camera permission.");
       });
