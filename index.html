@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>AR.js Multi-ID Adaptive Images</title>
+    <title>AR.js Adaptive Image</title>
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
     <style>
@@ -11,134 +11,38 @@
         overflow: hidden;
         width: 100%;
         height: 100%;
-        background: black;
-      }
-
-      #start-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.95);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-        flex-direction: column;
-        color: white;
-        font-family: sans-serif;
-      }
-
-      #start-overlay button {
-        padding: 15px 30px;
-        font-size: 18px;
-        border: none;
-        border-radius: 8px;
-        background: #007bff;
-        color: white;
-        cursor: pointer;
-      }
-
-      #start-overlay button:hover {
-        background: #0056b3;
       }
     </style>
   </head>
   <body>
-    <!-- Tap to Start Overlay -->
-    <div id="start-overlay">
-      <h2>Tap to Start AR</h2>
-      <button onclick="startAR()">Start</button>
-    </div>
-
-    <!-- AR Scene -->
-    <a-scene 
-      embedded 
-      vr-mode-ui="enabled: false"
-      arjs="detectionMode: mono_and_matrix; matrixCodeType: 5x5;"
-    >
-      <!-- Marker 1 -->
-      <a-marker type="barcode" value="1"
-        smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
-        <a-image id="img-1"
+    <a-scene embedded arjs="detectionMode: mono_and_matrix; matrixCodeType: 5x5;">
+      <a-marker type="barcode" value="5">
+        <a-image id="dynamic-img"
+                 src=""
                  position="0 0.5 0"
                  rotation="-90 0 0"
                  opacity="0"
                  animation="property: opacity; to: 1; dur: 1000; easing: easeInSine; delay: 500">
         </a-image>
       </a-marker>
-
-      <!-- Marker 2 -->
-      <a-marker type="barcode" value="2"
-        smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
-        <a-image id="img-2"
-                 position="0 0.5 0"
-                 rotation="-90 0 0"
-                 opacity="0"
-                 animation="property: opacity; to: 1; dur: 1000; easing: easeInSine; delay: 500">
-        </a-image>
-      </a-marker>
-
-      <!-- Marker 3 -->
-      <a-marker type="barcode" value="5"
-        smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
-        <a-image id="img-3"
-                 position="0 0.5 0"
-                 rotation="-90 0 0"
-                 opacity="0"
-                 animation="property: opacity; to: 1; dur: 1000; easing: easeInSine; delay: 500">
-        </a-image>
-      </a-marker>
-
-      <!-- Marker 4 -->
-      <a-marker type="barcode" value="4"
-        smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
-        <a-image id="img-4"
-                 position="0 0.5 0"
-                 rotation="-90 0 0"
-                 opacity="0"
-                 animation="property: opacity; to: 1; dur: 1000; easing: easeInSine; delay: 500">
-        </a-image>
-      </a-marker>
-
       <a-entity camera></a-entity>
     </a-scene>
 
-    <!-- Script Section -->
     <script>
-      function startAR() {
-        // Remove the overlay, which unblocks camera interaction on iOS
-        document.getElementById('start-overlay').remove();
+      const imageURL = "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/halo-halo.png";
 
-        // Preload and scale images
-        const imageMap = {
-          1: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID1.png",
-          2: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID2.png",
-          5: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/halo-halo.png",
-          4: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID4.png"
-        };
+      const img = new Image();
+      img.src = imageURL;
+      img.onload = function () {
+        const aspectRatio = img.naturalWidth / img.naturalHeight;
+        const baseHeight = 2;
+        const baseWidth = aspectRatio * baseHeight;
 
-        Object.entries(imageMap).forEach(([id, url]) => {
-          const img = new Image();
-          img.src = url;
-          img.onload = function () {
-            const aspectRatio = img.naturalWidth / img.naturalHeight;
-            const baseHeight = 2;
-            const baseWidth = aspectRatio * baseHeight;
-
-            const aImage = document.getElementById(`img-${id}`);
-            aImage.setAttribute('src', url);
-            aImage.setAttribute('width', baseWidth);
-            aImage.setAttribute('height', baseHeight);
-          };
-        });
-      }
-
-      // Optional fallback alert
-      navigator.mediaDevices?.getUserMedia?.({ video: true }).catch(() => {
-        alert("Camera access denied or unavailable. Use a secure browser and allow camera permission.");
-      });
+        const aImage = document.getElementById('dynamic-img');
+        aImage.setAttribute('src', imageURL);
+        aImage.setAttribute('width', baseWidth);
+        aImage.setAttribute('height', baseHeight);
+      };
     </script>
   </body>
 </html>
