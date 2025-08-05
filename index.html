@@ -11,12 +11,20 @@
         overflow: hidden;
         width: 100%;
         height: 100%;
+        background: black;
       }
     </style>
   </head>
   <body>
-    <a-scene embedded arjs="detectionMode: mono_and_matrix; matrixCodeType: 5x5;">
-      <a-marker type="barcode" value="5">
+    <a-scene embedded vr-mode-ui="enabled: false" arjs="detectionMode: mono_and_matrix; matrixCodeType: 5x5;">
+      <a-marker 
+        type="barcode" 
+        value="5"
+        smooth="true" 
+        smoothCount="5" 
+        smoothTolerance="0.01" 
+        smoothThreshold="5"
+      >
         <a-image id="dynamic-img"
                  src=""
                  position="0 0.5 0"
@@ -25,6 +33,7 @@
                  animation="property: opacity; to: 1; dur: 1000; easing: easeInSine; delay: 500">
         </a-image>
       </a-marker>
+
       <a-entity camera></a-entity>
     </a-scene>
 
@@ -43,6 +52,11 @@
         aImage.setAttribute('width', baseWidth);
         aImage.setAttribute('height', baseHeight);
       };
+
+      // Optional fallback for camera access
+      navigator.mediaDevices?.getUserMedia?.({ video: true }).catch(() => {
+        alert("Camera access denied or unavailable. Make sure you are using a secure browser (HTTPS) and allowed permission.");
+      });
     </script>
   </body>
 </html>
