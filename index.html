@@ -11,13 +11,16 @@
         overflow: hidden;
         width: 100%;
         height: 100%;
-        background: black;
-        z-index: -999999;
+        background: black; /* Safe default */
       }
     </style>
   </head>
   <body>
-    <a-scene embedded vr-mode-ui="enabled: false" arjs="detectionMode: mono_and_matrix; matrixCodeType: 5x5;">
+    <a-scene 
+      embedded 
+      vr-mode-ui="enabled: false"
+      arjs="sourceType: webcam; detectionMode: mono_and_matrix; matrixCodeType: 5x5;"
+    >
       <a-marker 
         type="barcode" 
         value="5"
@@ -53,11 +56,6 @@
         aImage.setAttribute('width', baseWidth);
         aImage.setAttribute('height', baseHeight);
       };
-
-      // Optional fallback for camera access
-      navigator.mediaDevices?.getUserMedia?.({ video: true }).catch(() => {
-        alert("Camera access denied or unavailable. Make sure you are using a secure browser (HTTPS) and allowed permission.");
-      });
     </script>
   </body>
 </html>
