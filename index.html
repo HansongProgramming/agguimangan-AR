@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>AR.js Adaptive Image</title>
+  <title>AR.js Multi Marker Adaptive Images</title>
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
   <style>
@@ -19,29 +19,63 @@
 
 <body>
   <a-scene embedded arjs="detectionMode: mono_and_matrix; matrixCodeType: 5x5;">
-    <a-marker type="barcode" value="5" value="5" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
-      <a-image id="dynamic-img" src="" position="0 0.5 0" rotation="-90 0 0" opacity="0"
+    <!-- Marker for ID 1 -->
+    <a-marker type="barcode" value="1" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
+      <a-image id="img-1" position="0 0.5 0" rotation="-90 0 0" opacity="0"
         animation="property: opacity; to: 1; dur: 1000; easing: easeInSine; delay: 500">
       </a-image>
     </a-marker>
+
+    <!-- Marker for ID 2 -->
+    <a-marker type="barcode" value="2" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
+      <a-image id="img-2" position="0 0.5 0" rotation="-90 0 0" opacity="0"
+        animation="property: opacity; to: 1; dur: 1000; easing: easeInSine; delay: 500">
+      </a-image>
+    </a-marker>
+
+    <!-- Marker for ID 4 -->
+    <a-marker type="barcode" value="4" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
+      <a-image id="img-4" position="0 0.5 0" rotation="-90 0 0" opacity="0"
+        animation="property: opacity; to: 1; dur: 1000; easing: easeInSine; delay: 500">
+      </a-image>
+    </a-marker>
+
+    <!-- Marker for ID 5 -->
+    <a-marker type="barcode" value="5" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
+      <a-image id="img-5" position="0 0.5 0" rotation="-90 0 0" opacity="0"
+        animation="property: opacity; to: 1; dur: 1000; easing: easeInSine; delay: 500">
+      </a-image>
+    </a-marker>
+
     <a-entity camera></a-entity>
   </a-scene>
 
   <script>
-    const imageURL = "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/halo-halo.png";
-
-    const img = new Image();
-    img.src = imageURL;
-    img.onload = function () {
-      const aspectRatio = img.naturalWidth / img.naturalHeight;
-      const baseHeight = 2;
-      const baseWidth = aspectRatio * baseHeight;
-
-      const aImage = document.getElementById('dynamic-img');
-      aImage.setAttribute('src', imageURL);
-      aImage.setAttribute('width', baseWidth);
-      aImage.setAttribute('height', baseHeight);
+    // Map of marker IDs to image URLs
+    const imageMap = {
+      1: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID1.png",
+      2: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID2.png",
+      4: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID4.png",
+      5: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/halo-halo.png"
     };
+
+    // Dynamically load and scale each image
+    Object.entries(imageMap).forEach(([id, url]) => {
+      const img = new Image();
+      img.src = url;
+      img.onload = function () {
+        const aspectRatio = img.naturalWidth / img.naturalHeight;
+        const baseHeight = 2;
+        const baseWidth = aspectRatio * baseHeight;
+
+        const aImage = document.getElementById(`img-${id}`);
+        if (aImage) {
+          aImage.setAttribute('src', url);
+          aImage.setAttribute('width', baseWidth);
+          aImage.setAttribute('height', baseHeight);
+        }
+      };
+    });
   </script>
 </body>
 
