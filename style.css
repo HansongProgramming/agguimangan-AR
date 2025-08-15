@@ -5,6 +5,10 @@ html{
     font-family: 'Poppins', sans-serif;
 }
 
+*{
+    border: 1px solid red;
+}
+
 button{
     color: white;
     background-color: #0A986C;
@@ -35,7 +39,7 @@ button{
 
 .foot {
     flex: 0 0 auto;
-    background-color: rgb(219, 219, 219);
+    background-color: rgb(238, 238, 238);
     padding: 1rem;
     align-items: space-around;
 }
