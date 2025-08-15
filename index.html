@@ -87,6 +87,10 @@
       </div>
     </div>
 
+    <div class="augmented-reality">
+
+    </div>
+
     <div class="foot">
         <button class="tab1">Home</button>
         <button class="tab2">Amenities</button>
@@ -94,6 +98,45 @@
         <button class="tab4">AR</button>
     </div>
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Map each button to its target div class
+    const tabMap = {
+        tab1: "about",
+        tab2: "amenities",
+        tab3: "rooms",
+        tab4: "augmented-reality"
+    };
+
+    // Get all buttons and all sections
+    const buttons = document.querySelectorAll(".foot button");
+    const sections = Object.values(tabMap).map(cls => document.querySelector(`.${cls}`));
+
+    // Function to show one section and hide the rest
+    function showSection(sectionClass) {
+        sections.forEach(sec => {
+            if (sec.classList.contains(sectionClass)) {
+                sec.style.display = "block";
+            } else {
+                sec.style.display = "none";
+            }
+        });
+    }
+
+    // Attach click listeners
+    buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const targetClass = tabMap[btn.className];
+            if (targetClass) {
+                showSection(targetClass);
+            }
+        });
+    });
+
+    // Default: Show "Home" (About) tab
+    showSection("about");
+});
+</script>
 
 </body>
 </html>
