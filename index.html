@@ -211,37 +211,6 @@
       </div>
 
       <div class="augmented-reality">
-        <a-scene embedded arjs="detectionMode: mono_and_matrix; matrixCodeType: 5x5;">
-          <!-- Marker for ID 1 -->
-          <a-marker type="barcode" value="1" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
-            <a-image id="img-1" position="0 0.5 0" rotation="-90 0 0" opacity="0"
-              animation="property: opacity; to: 1; dur: 1000; easing: easeInSine; delay: 500">
-            </a-image>
-          </a-marker>
-
-          <!-- Marker for ID 2 -->
-          <a-marker type="barcode" value="2" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
-            <a-image id="img-2" position="0 0.5 0" rotation="-90 0 0" opacity="0"
-              animation="property: opacity; to: 1; dur: 1000; easing: easeInSine; delay: 500">
-            </a-image>
-          </a-marker>
-
-          <!-- Marker for ID 4 -->
-          <a-marker type="barcode" value="4" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
-            <a-image id="img-4" position="0 0.5 0" rotation="-90 0 0" opacity="0"
-              animation="property: opacity; to: 1; dur: 1000; easing: easeInSine; delay: 500">
-            </a-image>
-          </a-marker>
-
-          <!-- Marker for ID 5 -->
-          <a-marker type="barcode" value="5" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
-            <a-image id="img-5" position="0 0.5 0" rotation="-90 0 0" opacity="0"
-              animation="property: opacity; to: 1; dur: 1000; easing: easeInSine; delay: 500">
-            </a-image>
-          </a-marker>
-
-          <a-entity camera></a-entity>
-        </a-scene>
       </div>
     </div>
 
@@ -252,86 +221,91 @@
       <button class="tab4">AR</button>
     </div>
   </div>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const tabMap = {
-        tab1: "about",
-        tab2: "amenities",
-        tab3: "rooms",
-        tab4: "augmented-reality"
-      };
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const tabMap = {
+      tab1: "about",
+      tab2: "amenities",
+      tab3: "rooms",
+      tab4: "augmented-reality"
+    };
 
-      const buttons = document.querySelectorAll(".foot button");
-      const sections = Object.values(tabMap).map(cls => document.querySelector(`.${cls}`));
+    const buttons = document.querySelectorAll(".foot button");
+    const sections = Object.values(tabMap).map(cls => document.querySelector(`.${cls}`));
+    const arContainer = document.getElementById("arContainer");
 
-      function showSection(sectionClass) {
-        sections.forEach(sec => {
-          sec.style.display = sec.classList.contains(sectionClass) ? "block" : "none";
-        });
-      }
+    function showSection(sectionClass) {
+      sections.forEach(sec => {
+        if (!sec) return;
 
-      buttons.forEach(btn => {
-        btn.addEventListener("click", () => {
-          const targetClass = tabMap[btn.className];
-          if (targetClass) {
-            showSection(targetClass);
+        if (sec.classList.contains(sectionClass)) {
+          sec.style.display = "block";
+
+          // Build AR scene if entering AR tab
+          if (sectionClass === "augmented-reality" && !arContainer.hasChildNodes()) {
+            initARScene();
           }
-        });
+        } else {
+          sec.style.display = "none";
+
+          // Clear AR scene if leaving AR tab
+          if (sec.classList.contains("augmented-reality")) {
+            arContainer.innerHTML = "";
+          }
+        }
       });
+    }
 
-      showSection("about");
-
-      // ----- About Carousel Slideshow with Fade -----
-      const carouselImg = document.querySelector(".about-carousel img");
-      const imagePaths = [
-        "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/icon1.jpg",
-        "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/icon2.jpg",
-        "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/icon3.jpg",
-        "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/icon4.jpg"
-      ];
-      let currentIndex = 0;
-
-      setInterval(() => {
-        // fade out
-        carouselImg.style.opacity = 0;
-
-        setTimeout(() => {
-          // change image after fade out
-          currentIndex = (currentIndex + 1) % imagePaths.length;
-          carouselImg.src = imagePaths[currentIndex];
-
-          // fade in
-          carouselImg.style.opacity = 1;
-        }, 1000); // match transition duration (1s)
-      }, 3000);
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const targetClass = tabMap[btn.className];
+        if (targetClass) {
+          showSection(targetClass);
+        }
+      });
     });
 
-    const album = document.querySelector(".album");
+    // Default start
+    showSection("about");
 
+    // ----- About Carousel Slideshow with Fade -----
+    const carouselImg = document.querySelector(".about-carousel img");
+    const imagePaths = [
+      "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/icon1.jpg",
+      "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/icon2.jpg",
+      "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/icon3.jpg",
+      "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/icon4.jpg"
+    ];
+    let currentIndex = 0;
+
+    setInterval(() => {
+      carouselImg.style.opacity = 0;
+      setTimeout(() => {
+        currentIndex = (currentIndex + 1) % imagePaths.length;
+        carouselImg.src = imagePaths[currentIndex];
+        carouselImg.style.opacity = 1;
+      }, 1000);
+    }, 3000);
+
+    // ----- Album shuffle -----
+    const album = document.querySelector(".album");
     album.addEventListener("click", () => {
       const top = album.firstElementChild;
-
-      // animate top card leaving
       top.style.transform = "translateY(-80px) rotate(10deg)";
       top.style.opacity = "0";
-
       setTimeout(() => {
-        // reset card and move it to the back
         top.style.transition = "none";
         top.style.transform = "";
         top.style.opacity = "";
-
         album.appendChild(top);
-
-        // force reflow so transition re-applies
         void top.offsetWidth;
         top.style.transition = "transform 0.3s ease, opacity 0.6s ease";
       }, 300);
     });
 
+    // ----- Room details sync -----
     const carousel = document.getElementById('roomCarousel');
     const rooms = document.querySelectorAll('.room');
-
     const roomName = document.getElementById('roomName');
     const roomPrice = document.getElementById('roomPrice');
     const roomSize = document.getElementById('roomSize');
@@ -348,7 +322,6 @@
       roomServices.textContent = room.dataset.services;
     }
 
-    // detect which room is centered
     carousel.addEventListener('scroll', () => {
       let closestRoom = null;
       let closestDistance = Infinity;
@@ -370,35 +343,54 @@
       }
     });
 
-    // initialize with first room
     updateRoomDetails(rooms[0]);
 
-    // Map of marker IDs to image URLs
-    const imageMap = {
-      1: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID1.png",
-      2: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID2.png",
-      4: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID4.png",
-      5: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/halo-halo.png"
-    };
+    // ----- Build AR scene dynamically -----
+    function initARScene() {
+      arContainer.innerHTML = `
+        <a-scene embedded arjs="detectionMode: mono_and_matrix; matrixCodeType: 5x5;">
+          <a-marker type="barcode" value="1">
+            <a-image id="img-1" position="0 0.5 0" rotation="-90 0 0"></a-image>
+          </a-marker>
+          <a-marker type="barcode" value="2">
+            <a-image id="img-2" position="0 0.5 0" rotation="-90 0 0"></a-image>
+          </a-marker>
+          <a-marker type="barcode" value="4">
+            <a-image id="img-4" position="0 0.5 0" rotation="-90 0 0"></a-image>
+          </a-marker>
+          <a-marker type="barcode" value="5">
+            <a-image id="img-5" position="0 0.5 0" rotation="-90 0 0"></a-image>
+          </a-marker>
+          <a-entity camera></a-entity>
+        </a-scene>
+      `;
 
-    // Dynamically load and scale each image
-    Object.entries(imageMap).forEach(([id, url]) => {
-      const img = new Image();
-      img.src = url;
-      img.onload = function () {
-        const aspectRatio = img.naturalWidth / img.naturalHeight;
-        const baseHeight = 2;
-        const baseWidth = aspectRatio * baseHeight;
-
-        const aImage = document.getElementById(`img-${id}`);
-        if (aImage) {
-          aImage.setAttribute('src', url);
-          aImage.setAttribute('width', baseWidth);
-          aImage.setAttribute('height', baseHeight);
-        }
+      const imageMap = {
+        1: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID1.png",
+        2: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID2.png",
+        4: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID4.png",
+        5: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/halo-halo.png"
       };
-    });
-  </script>
+
+      Object.entries(imageMap).forEach(([id, url]) => {
+        const img = new Image();
+        img.src = url;
+        img.onload = function () {
+          const aspectRatio = img.naturalWidth / img.naturalHeight;
+          const baseHeight = 2;
+          const baseWidth = aspectRatio * baseHeight;
+          const aImage = document.getElementById(`img-${id}`);
+          if (aImage) {
+            aImage.setAttribute('src', url);
+            aImage.setAttribute('width', baseWidth);
+            aImage.setAttribute('height', baseHeight);
+          }
+        };
+      });
+    }
+  });
+</script>
+
 </body>
 
 </html>
