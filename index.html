@@ -5,9 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agguimangan Agro-Eco Tourism Farm</title>
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
-
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -232,27 +229,10 @@
 
     const buttons = document.querySelectorAll(".foot button");
     const sections = Object.values(tabMap).map(cls => document.querySelector(`.${cls}`));
-    const arContainer = document.getElementById("arContainer");
 
     function showSection(sectionClass) {
       sections.forEach(sec => {
-        if (!sec) return;
-
-        if (sec.classList.contains(sectionClass)) {
-          sec.style.display = "block";
-
-          // Build AR scene if entering AR tab
-          if (sectionClass === "augmented-reality" && !arContainer.hasChildNodes()) {
-            initARScene();
-          }
-        } else {
-          sec.style.display = "none";
-
-          // Clear AR scene if leaving AR tab
-          if (sec.classList.contains("augmented-reality")) {
-            arContainer.innerHTML = "";
-          }
-        }
+        sec.style.display = sec.classList.contains(sectionClass) ? "block" : "none";
       });
     }
 
@@ -260,12 +240,16 @@
       btn.addEventListener("click", () => {
         const targetClass = tabMap[btn.className];
         if (targetClass) {
-          showSection(targetClass);
+          if (targetClass === "augmented-reality") {
+            // Redirect instead of showing section
+            window.location.href = "Augmented-reality.html";
+          } else {
+            showSection(targetClass);
+          }
         }
       });
     });
 
-    // Default start
     showSection("about");
 
     // ----- About Carousel Slideshow with Fade -----
@@ -279,115 +263,111 @@
     let currentIndex = 0;
 
     setInterval(() => {
+      // fade out
       carouselImg.style.opacity = 0;
+
       setTimeout(() => {
+        // change image after fade out
         currentIndex = (currentIndex + 1) % imagePaths.length;
         carouselImg.src = imagePaths[currentIndex];
+
+        // fade in
         carouselImg.style.opacity = 1;
-      }, 1000);
+      }, 1000); // match transition duration (1s)
     }, 3000);
+  });
 
-    // ----- Album shuffle -----
-    const album = document.querySelector(".album");
-    album.addEventListener("click", () => {
-      const top = album.firstElementChild;
-      top.style.transform = "translateY(-80px) rotate(10deg)";
-      top.style.opacity = "0";
-      setTimeout(() => {
-        top.style.transition = "none";
-        top.style.transform = "";
-        top.style.opacity = "";
-        album.appendChild(top);
-        void top.offsetWidth;
-        top.style.transition = "transform 0.3s ease, opacity 0.6s ease";
-      }, 300);
-    });
+  const album = document.querySelector(".album");
 
-    // ----- Room details sync -----
-    const carousel = document.getElementById('roomCarousel');
-    const rooms = document.querySelectorAll('.room');
-    const roomName = document.getElementById('roomName');
-    const roomPrice = document.getElementById('roomPrice');
-    const roomSize = document.getElementById('roomSize');
-    const roomCapacity = document.getElementById('roomCapacity');
-    const roomBed = document.getElementById('roomBed');
-    const roomServices = document.getElementById('roomServices');
+  album.addEventListener("click", () => {
+    const top = album.firstElementChild;
 
-    function updateRoomDetails(room) {
-      roomName.textContent = room.dataset.room;
-      roomPrice.textContent = room.dataset.price;
-      roomSize.textContent = room.dataset.size;
-      roomCapacity.textContent = room.dataset.capacity;
-      roomBed.textContent = room.dataset.bed;
-      roomServices.textContent = room.dataset.services;
-    }
+    // animate top card leaving
+    top.style.transform = "translateY(-80px) rotate(10deg)";
+    top.style.opacity = "0";
 
-    carousel.addEventListener('scroll', () => {
-      let closestRoom = null;
-      let closestDistance = Infinity;
-      const carouselRect = carousel.getBoundingClientRect();
+    setTimeout(() => {
+      // reset card and move it to the back
+      top.style.transition = "none";
+      top.style.transform = "";
+      top.style.opacity = "";
 
-      rooms.forEach(room => {
-        const rect = room.getBoundingClientRect();
-        const roomCenter = rect.left + rect.width / 2;
-        const carouselCenter = carouselRect.left + carouselRect.width / 2;
-        const distance = Math.abs(carouselCenter - roomCenter);
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestRoom = room;
-        }
-      });
+      album.appendChild(top);
 
-      if (closestRoom) {
-        updateRoomDetails(closestRoom);
+      // force reflow so transition re-applies
+      void top.offsetWidth;
+      top.style.transition = "transform 0.3s ease, opacity 0.6s ease";
+    }, 300);
+  });
+
+  const carousel = document.getElementById('roomCarousel');
+  const rooms = document.querySelectorAll('.room');
+
+  const roomName = document.getElementById('roomName');
+  const roomPrice = document.getElementById('roomPrice');
+  const roomSize = document.getElementById('roomSize');
+  const roomCapacity = document.getElementById('roomCapacity');
+  const roomBed = document.getElementById('roomBed');
+  const roomServices = document.getElementById('roomServices');
+
+  function updateRoomDetails(room) {
+    roomName.textContent = room.dataset.room;
+    roomPrice.textContent = room.dataset.price;
+    roomSize.textContent = room.dataset.size;
+    roomCapacity.textContent = room.dataset.capacity;
+    roomBed.textContent = room.dataset.bed;
+    roomServices.textContent = room.dataset.services;
+  }
+
+  // detect which room is centered
+  carousel.addEventListener('scroll', () => {
+    let closestRoom = null;
+    let closestDistance = Infinity;
+    const carouselRect = carousel.getBoundingClientRect();
+
+    rooms.forEach(room => {
+      const rect = room.getBoundingClientRect();
+      const roomCenter = rect.left + rect.width / 2;
+      const carouselCenter = carouselRect.left + carouselRect.width / 2;
+      const distance = Math.abs(carouselCenter - roomCenter);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestRoom = room;
       }
     });
 
-    updateRoomDetails(rooms[0]);
-
-    // ----- Build AR scene dynamically -----
-    function initARScene() {
-      arContainer.innerHTML = `
-        <a-scene embedded arjs="detectionMode: mono_and_matrix; matrixCodeType: 5x5;">
-          <a-marker type="barcode" value="1">
-            <a-image id="img-1" position="0 0.5 0" rotation="-90 0 0"></a-image>
-          </a-marker>
-          <a-marker type="barcode" value="2">
-            <a-image id="img-2" position="0 0.5 0" rotation="-90 0 0"></a-image>
-          </a-marker>
-          <a-marker type="barcode" value="4">
-            <a-image id="img-4" position="0 0.5 0" rotation="-90 0 0"></a-image>
-          </a-marker>
-          <a-marker type="barcode" value="5">
-            <a-image id="img-5" position="0 0.5 0" rotation="-90 0 0"></a-image>
-          </a-marker>
-          <a-entity camera></a-entity>
-        </a-scene>
-      `;
-
-      const imageMap = {
-        1: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID1.png",
-        2: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID2.png",
-        4: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID4.png",
-        5: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/halo-halo.png"
-      };
-
-      Object.entries(imageMap).forEach(([id, url]) => {
-        const img = new Image();
-        img.src = url;
-        img.onload = function () {
-          const aspectRatio = img.naturalWidth / img.naturalHeight;
-          const baseHeight = 2;
-          const baseWidth = aspectRatio * baseHeight;
-          const aImage = document.getElementById(`img-${id}`);
-          if (aImage) {
-            aImage.setAttribute('src', url);
-            aImage.setAttribute('width', baseWidth);
-            aImage.setAttribute('height', baseHeight);
-          }
-        };
-      });
+    if (closestRoom) {
+      updateRoomDetails(closestRoom);
     }
+  });
+
+  // initialize with first room
+  updateRoomDetails(rooms[0]);
+
+  // Map of marker IDs to image URLs
+  const imageMap = {
+    1: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID1.png",
+    2: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID2.png",
+    4: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID4.png",
+    5: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/halo-halo.png"
+  };
+
+  // Dynamically load and scale each image
+  Object.entries(imageMap).forEach(([id, url]) => {
+    const img = new Image();
+    img.src = url;
+    img.onload = function () {
+      const aspectRatio = img.naturalWidth / img.naturalHeight;
+      const baseHeight = 2;
+      const baseWidth = aspectRatio * baseHeight;
+
+      const aImage = document.getElementById(`img-${id}`);
+      if (aImage) {
+        aImage.setAttribute('src', url);
+        aImage.setAttribute('width', baseWidth);
+        aImage.setAttribute('height', baseHeight);
+      }
+    };
   });
 </script>
 
