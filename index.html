@@ -102,7 +102,6 @@
 </div>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    // Map each button to its target div class
     const tabMap = {
         tab1: "about",
         tab2: "amenities",
@@ -110,22 +109,15 @@ document.addEventListener("DOMContentLoaded", function () {
         tab4: "augmented-reality"
     };
 
-    // Get all buttons and all sections
     const buttons = document.querySelectorAll(".foot button");
     const sections = Object.values(tabMap).map(cls => document.querySelector(`.${cls}`));
 
-    // Function to show one section and hide the rest
     function showSection(sectionClass) {
         sections.forEach(sec => {
-            if (sec.classList.contains(sectionClass)) {
-                sec.style.display = "block";
-            } else {
-                sec.style.display = "none";
-            }
+            sec.style.display = sec.classList.contains(sectionClass) ? "block" : "none";
         });
     }
 
-    // Attach click listeners
     buttons.forEach(btn => {
         btn.addEventListener("click", () => {
             const targetClass = tabMap[btn.className];
@@ -135,10 +127,34 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Default: Show "Home" (About) tab
     showSection("about");
+
+    // ----- About Carousel Slideshow with Fade -----
+    const carouselImg = document.querySelector(".about-carousel img");
+    const imagePaths = [
+        "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/icon1.jpg",
+        "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/icon2.jpg",
+        "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/icon3.jpg",
+        "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/icon4.jpg"
+    ];
+    let currentIndex = 0;
+
+    setInterval(() => {
+        // fade out
+        carouselImg.style.opacity = 0;
+        
+        setTimeout(() => {
+            // change image after fade out
+            currentIndex = (currentIndex + 1) % imagePaths.length;
+            carouselImg.src = imagePaths[currentIndex];
+            
+            // fade in
+            carouselImg.style.opacity = 1;
+        }, 1000); // match transition duration (1s)
+    }, 3000);
 });
 </script>
+
 
 </body>
 </html>
