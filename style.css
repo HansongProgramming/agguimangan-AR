@@ -1,11 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-html{
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
 }
 
-button{
+
+button {
     color: white;
     background-color: #0A986C;
     border-radius: 80px;
@@ -21,16 +33,70 @@ button{
 
 .header {
     flex: 0 0 auto;
-    display: flex;  
+    height: 8vh;
+    display: flex;
     align-items: center;
+    justify-content: flex-start;
     font-size: 0.8rem;
     padding: 1rem;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 100;
 }
 
 .content {
     flex: 1 1 0;
     overflow-y: auto;
+}
+
+.about-carousel {
+    height: 40vh;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0px 0px 60px 60px;
+}
+
+.about-carousel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.about-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    text-align: left;
+    padding-left: 1rem;
+}
+
+.about-overlay h1 {
+    margin-bottom: 0.5rem;
+    line-height: 1.8rem;
+}
+
+.about-overlay p {
+    margin-bottom: 2rem;
+    line-height: 1.3rem;
+}
+
+.description {
     padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    color: #565656;
 }
 
 .foot {
