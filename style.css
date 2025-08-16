@@ -61,6 +61,10 @@ button {
     padding-bottom: 8vh;
 }
 
+.elements{
+  height: 140%;
+}
+
 .about-carousel {
     height: 40vh;
     position: relative;
@@ -115,7 +119,6 @@ button {
 }
 
 .amenities{
-    height: 100%;
     padding: 1rem;
 }
 
@@ -314,3 +317,74 @@ display: flex;
     padding: 1rem;
     z-index: 1000;
 }
+/* 
+.momento-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.momento-content {
+  position: relative;
+  width: 90%;
+  max-width: 1000px;
+  height: 80%;
+  background: #000;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.momento-content iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: rgba(255,255,255,0.8);
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+.close-btn:hover {
+  background: white;
+} */
+
+.modal {
+    position: fixed; inset: 0;
+    display: none; /* toggled to flex in JS */
+    align-items: center; justify-content: center;
+    background: rgba(0,0,0,.7);
+    z-index: 9999;
+  }
+  .modal .box {
+    position: relative;
+    width: min(960px, 95vw);
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .modal .close {
+    position: absolute; top: 8px; right: 12px;
+    font-size: 32px; color: #fff; cursor: pointer;
+    z-index: 1;
+  }
+  .modal iframe, .modal img, .modal video {
+    width: 100%; height: 70vh; border: 0; display: none;
+  }
+  .modal #caption {
+    color: #fff; padding: 8px 12px; font-weight: 600; background: #111;
+  }

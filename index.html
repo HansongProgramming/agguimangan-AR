@@ -17,7 +17,7 @@
     </div>
 
     <div class="content">
-      <div class="about">
+      <div class="about elements">
         <div class="about-carousel">
           <img src="https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/icon1.jpg"
             alt="Images">
@@ -45,7 +45,7 @@
         </div>
       </div>
 
-      <div class="amenities">
+      <div class="amenities elements">
         <h1>
           Ultimate Offers
         </h1>
@@ -113,7 +113,7 @@
         <button class="start-booking">Start Booking</button>
       </div>
 
-      <div class="rooms">
+      <div class="rooms elements">
         <!-- Carousel -->
         <div class="room-carousel" id="roomCarousel">
           <div class="room" data-room="Macau Room" data-price="₱2,800.00 / Night" data-size="30 ft"
@@ -218,6 +218,32 @@
       <button class="tab4">AR</button>
     </div>
   </div>
+
+
+  <!-- REPLACE your existing modal HTML with this -->
+<div id="modal360" class="modal" role="dialog" aria-modal="true">
+  <div class="box">
+    <span id="btnCloseModal" class="close" aria-label="Close">&times;</span>
+
+    <!-- Momento360 iframe (now with correct permissions) -->
+    <iframe id="img01"
+      allow="accelerometer; gyroscope; magnetometer; xr-spatial-tracking"
+      allowfullscreen
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+
+    <!-- Normal image -->
+    <img id="img02" alt="">
+
+    <!-- Video -->
+    <video id="vid01" controls></video>
+
+    <!-- Caption -->
+    <div id="caption"></div>
+  </div>
+</div>
+
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const tabMap = {
@@ -263,55 +289,131 @@
     let currentIndex = 0;
 
     setInterval(() => {
-      // fade out
       carouselImg.style.opacity = 0;
-
       setTimeout(() => {
-        // change image after fade out
         currentIndex = (currentIndex + 1) % imagePaths.length;
         carouselImg.src = imagePaths[currentIndex];
-
-        // fade in
         carouselImg.style.opacity = 1;
-      }, 1000); // match transition duration (1s)
+      }, 1000);
     }, 3000);
   });
 
-  const album = document.querySelector(".album");
+  // ----- MOMENTO360 MODAL LOGIC -----
+    // ----- MOMENTO360 MAP -----
+  const momentoMap = {
+    "Macau Room": "https://momento360.com/e/u/e68cb4d2bd5e45f2a05367773a80d89b?utm_campaign=embed&utm_source=other&heading=0&pitch=0&field-of-view=75&size=medium",
+    "Morocco Room": "https://momento360.com/e/u/9105e49a702748c398bf72dc4ca592b5?utm_campaign=embed&utm_source=other&heading=0&pitch=0&field-of-view=75&size=medium",
+    "Paris Room": "https://momento360.com/e/u/089e3bb0229941668b469125e0a463f4?utm_campaign=embed&utm_source=other&heading=0&pitch=0&field-of-view=75&size=medium",
+    "Portugal Room": "https://momento360.com/e/u/2eb1c3b71aa54608a4e83000b4cc063d?utm_campaign=embed&utm_source=other&heading=0&pitch=0&field-of-view=75&size=medium",
+    "Spain Room": "https://momento360.com/e/u/3a94709ef28e4ab08dca457cbcf3d25a?utm_campaign=embed&utm_source=other&heading=0&pitch=0&field-of-view=75&size=medium",
+    "Vietnam Room": "https://momento360.com/e/u/0c81ad97888144c7bb17d82b742e6236?utm_campaign=embed&utm_source=other&heading=0&pitch=0&field-of-view=75&size=medium"
+  };
 
-  album.addEventListener("click", () => {
-    const top = album.firstElementChild;
+  // ----- MODAL ELEMENTS -----
+  const modal360   = document.getElementById("modal360");
+  const modalBox   = modal360.querySelector(".box");
+  const modalIframe= document.getElementById("img01");
+  const modalImg   = document.getElementById("img02");
+  const modalVid   = document.getElementById("vid01");
+  const captionEl  = document.getElementById("caption");
+  const closeBtn   = document.getElementById("btnCloseModal");
 
-    // animate top card leaving
-    top.style.transform = "translateY(-80px) rotate(10deg)";
-    top.style.opacity = "0";
+  function hideAllMedia() {
+    modalIframe.style.display = "none";
+    modalImg.style.display = "none";
+    modalVid.style.display = "none";
+    // clear sources to stop playback
+    modalIframe.src = "";
+    modalImg.src = "";
+    modalVid.src = "";
+  }
 
-    setTimeout(() => {
-      // reset card and move it to the back
-      top.style.transition = "none";
-      top.style.transform = "";
-      top.style.opacity = "";
+  function openModal({ type, src, caption }) {
+    hideAllMedia();
+    captionEl.textContent = caption || "";
 
-      album.appendChild(top);
+    if (type === "momento") {
+      modalIframe.src = src;
+      modalIframe.style.display = "block";
+    } else if (type === "image") {
+      modalImg.src = src;
+      modalImg.style.display = "block";
+    } else if (type === "video") {
+      modalVid.src = src;
+      modalVid.style.display = "block";
+    }
 
-      // force reflow so transition re-applies
-      void top.offsetWidth;
-      top.style.transition = "transform 0.3s ease, opacity 0.6s ease";
-    }, 300);
+    modal360.style.display = "flex";
+  }
+
+  function closeModal() {
+    modal360.style.display = "none";
+    hideAllMedia();
+  }
+
+  closeBtn.addEventListener("click", closeModal);
+  // click backdrop to close
+  modal360.addEventListener("click", (e) => {
+    if (!modalBox.contains(e.target)) closeModal();
   });
 
-  const carousel = document.getElementById('roomCarousel');
-  const rooms = document.querySelectorAll('.room');
+  // EXPOSED so inline onclick / external buttons can call it
+  window.modalClicked = function(label) {
+    // Decide what to open based on label
+    if (momentoMap[label]) {
+      openModal({ type: "momento", src: momentoMap[label], caption: label });
+    } else if (label === "Sample Image") {
+      openModal({ type: "image", src: "https://via.placeholder.com/1200x700.png?text=Sample+Image", caption: label });
+    } else if (label === "Sample Video") {
+      openModal({ type: "video", src: "https://www.w3schools.com/html/mov_bbb.mp4", caption: label });
+    }
+  };
 
-  const roomName = document.getElementById('roomName');
-  const roomPrice = document.getElementById('roomPrice');
-  const roomSize = document.getElementById('roomSize');
-  const roomCapacity = document.getElementById('roomCapacity');
-  const roomBed = document.getElementById('roomBed');
-  const roomServices = document.getElementById('roomServices');
+  // ----- WIRE YOUR "View in 360 Degrees" BUTTON -----
+  // Uses the currently shown room name in #roomName
+  const view360Btn = document.querySelector(".room-details .right button");
+  const roomNameEl = document.getElementById("roomName");
+  if (view360Btn && roomNameEl) {
+    view360Btn.addEventListener("click", () => {
+      const current = roomNameEl.textContent.trim();
+      if (momentoMap[current]) {
+        openModal({ type: "momento", src: momentoMap[current], caption: current });
+      } else {
+        alert("No 360 tour found for: " + current);
+      }
+    });
+  }
+
+  // ---- SAFETY GUARDS for other code that may throw if elements are missing ----
+  const album = document.querySelector(".album");
+  if (album) {
+    album.addEventListener("click", () => {
+      const top = album.firstElementChild;
+      if (!top) return;
+      top.style.transform = "translateY(-80px) rotate(10deg)";
+      top.style.opacity = "0";
+      setTimeout(() => {
+        top.style.transition = "none";
+        top.style.transform = "";
+        top.style.opacity = "";
+        album.appendChild(top);
+        void top.offsetWidth;
+        top.style.transition = "transform 0.3s ease, opacity 0.6s ease";
+      }, 300);
+    });
+  }
+
+  const carousel = document.getElementById("roomCarousel");
+  const rooms = document.querySelectorAll(".room");
+  const roomPrice = document.getElementById("roomPrice");
+  const roomSize = document.getElementById("roomSize");
+  const roomCapacity = document.getElementById("roomCapacity");
+  const roomBed = document.getElementById("roomBed");
+  const roomServices = document.getElementById("roomServices");
 
   function updateRoomDetails(room) {
-    roomName.textContent = room.dataset.room;
+    if (!room) return;
+    roomNameEl.textContent = room.dataset.room;
     roomPrice.textContent = room.dataset.price;
     roomSize.textContent = room.dataset.size;
     roomCapacity.textContent = room.dataset.capacity;
@@ -319,57 +421,23 @@
     roomServices.textContent = room.dataset.services;
   }
 
-  // detect which room is centered
-  carousel.addEventListener('scroll', () => {
-    let closestRoom = null;
-    let closestDistance = Infinity;
-    const carouselRect = carousel.getBoundingClientRect();
-
-    rooms.forEach(room => {
-      const rect = room.getBoundingClientRect();
-      const roomCenter = rect.left + rect.width / 2;
-      const carouselCenter = carouselRect.left + carouselRect.width / 2;
-      const distance = Math.abs(carouselCenter - roomCenter);
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        closestRoom = room;
-      }
+  if (carousel) {
+    carousel.addEventListener("scroll", () => {
+      let closest = null, min = Infinity;
+      const cRect = carousel.getBoundingClientRect();
+      const cCenter = cRect.left + cRect.width / 2;
+      rooms.forEach(r => {
+        const rect = r.getBoundingClientRect();
+        const center = rect.left + rect.width / 2;
+        const d = Math.abs(cCenter - center);
+        if (d < min) { min = d; closest = r; }
+      });
+      updateRoomDetails(closest);
     });
-
-    if (closestRoom) {
-      updateRoomDetails(closestRoom);
-    }
-  });
-
-  // initialize with first room
-  updateRoomDetails(rooms[0]);
-
-  // Map of marker IDs to image URLs
-  const imageMap = {
-    1: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID1.png",
-    2: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID2.png",
-    4: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/ID4.png",
-    5: "https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/halo-halo.png"
-  };
-
-  // Dynamically load and scale each image
-  Object.entries(imageMap).forEach(([id, url]) => {
-    const img = new Image();
-    img.src = url;
-    img.onload = function () {
-      const aspectRatio = img.naturalWidth / img.naturalHeight;
-      const baseHeight = 2;
-      const baseWidth = aspectRatio * baseHeight;
-
-      const aImage = document.getElementById(`img-${id}`);
-      if (aImage) {
-        aImage.setAttribute('src', url);
-        aImage.setAttribute('width', baseWidth);
-        aImage.setAttribute('height', baseHeight);
-      }
-    };
-  });
+    if (rooms[0]) updateRoomDetails(rooms[0]);
+  }
 </script>
+
 
 </body>
 
