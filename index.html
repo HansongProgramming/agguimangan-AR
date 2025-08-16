@@ -44,8 +44,12 @@
           Ultimate Offers
         </h1>
         <div class="cards">
-          <img src="" alt="img1">
-          <h3>Organic Restaurant</h3>
+          <div class="album">
+          <div class="photo"><img src="https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/icon1.jpg" alt=""><h3>Organic Restaurant</h3></div>
+          <div class="photo"><img src="https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/icon2.jpg" alt=""><h3>test`</h3></div>
+          <div class="photo"><img src="https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/icon3.jpg" alt=""><h3>test1</h3></div>
+          <div class="photo"><img src="https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/icon4.jpg" alt=""><h3>test2</h3></div>
+        </div>
         </div>
         <p>Note: Some of our amenities are available on a day-to-day basis as we allow walk-in accommodations and day tours. Please inquire and reserve immediately upon arrival.</p>
         <div class="thumnail-carousel">
@@ -152,6 +156,29 @@ document.addEventListener("DOMContentLoaded", function () {
             carouselImg.style.opacity = 1;
         }, 1000); // match transition duration (1s)
     }, 3000);
+});
+
+const album = document.querySelector(".album");
+
+album.addEventListener("click", () => {
+  const top = album.firstElementChild;
+
+  // animate top card leaving
+  top.style.transform = "translateY(-80px) rotate(10deg)";
+  top.style.opacity = "0";
+
+  setTimeout(() => {
+    // reset card and move it to the back
+    top.style.transition = "none";
+    top.style.transform = "";
+    top.style.opacity = "";
+
+    album.appendChild(top);
+
+    // force reflow so transition re-applies
+    void top.offsetWidth;
+    top.style.transition = "transform 0.6s ease, opacity 0.6s ease";
+  }, 600);
 });
 </script>
 

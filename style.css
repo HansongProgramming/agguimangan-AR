@@ -105,9 +105,75 @@ button {
     gap: 0.5rem;
 }
 
+.amenities{
+    height: 100%;
+}
+
+.cards{
+    width: 100%;
+    height: 40%;
+    border: 1px solid red;
+}
+
+.album {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  perspective: 1000px;
+  cursor: pointer;
+display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.photo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.6s ease, opacity 0.6s ease;
+}
+
+.photo img {
+  width: 90%;
+  height: 90%;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+.photo h3 {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 1.2rem;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+}
+
+/* Stacked look with tilt + protrude */
+.photo:nth-child(1) { z-index: 4; transform: translateY(0px) rotate(0deg); }
+.photo:nth-child(2) { z-index: 3; transform: translateY(-5px) scale(0.98) rotate(-2deg); }
+.photo:nth-child(3) { z-index: 2; transform: translateY(-10px) scale(0.96) rotate(2deg); }
+.photo:nth-child(4) { z-index: 1; transform: translateY(-15px) scale(0.94) rotate(-1deg); }
+
+
+.amenities p{
+    font-size: 0.8rem;
+    padding: 1rem;
+    color: #565656;
+    text-align: center;
+}
+
 .foot {
     flex: 0 0 auto;
     background-color: rgb(238, 238, 238);
     padding: 1rem;
     align-items: space-around;
 }
+
