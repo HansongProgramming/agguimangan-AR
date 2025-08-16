@@ -73,42 +73,80 @@
               <img src="https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/vietnam.jpg" alt="">
             </div>
           </div>
-        <button>Start Booking</button>
+        <button class="start-booking">Start Booking</button>
       </div>
 
-      <div class="rooms">
-        <div class="room-carousel">
-          <div class="room1">
-            <img src="" alt="room1">
-            <div class="room-quick-info">
-              <h3>Paris Room</h3>
-              <div class="room-price">₱ 3,200.00 / Night</div>
-              <img src="" alt="">
-              <p class="person-count">8</p>
-            </div>
-          </div>
-        </div>
-        <div class="room-title">
-          <h1>Paris Room</h1>
-          <p><h3>P 3,200.00</h3> / Night</p>
-          <button>Check In</button>
-        </div>
-        <div class="room-details">
-          <div class="left">
-            <p>Size:</p>
-            <p>Capacity:</p>
-            <p>Bed:</p>
-            <p>Services:</p>
-          </div>
-          <div class="right">
-            <p>30ft</p>
-            <p>8 max</p>
-            <p>4 Double Bed</p>
-            <p>Aircon Unit, Common Toilet w/ Bath, Desk and Chair</p>
-            <button>View in 360 Degrees</button>
-          </div>
+        <div class="rooms">
+    <!-- Carousel -->
+    <div class="room-carousel" id="roomCarousel">
+      <div class="room" data-room="Macau Room" data-price="₱2,800.00 / Night" data-size="30 ft" data-capacity="7 max" data-bed="3 Double Bed, 1 Single Bed" data-services="Aircon Unit, Bathroom Sink & Mirror, Common Toilet and Bath, Electric Fan, Electric Kettle, FREE Wi-Fi, Hot and Cold Shower, Outdoor Table & Chairs, Terrace">
+        <img src="https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/macau.jpg" alt="Macau Room">
+        <div class="room-quick-info">
+          <h3>Macau Room</h3>
+          <div class="room-price">₱2,800.00 / Night</div>
         </div>
       </div>
+      <div class="room" data-room="Morocco Room" data-price="₱1,500.00 / Night" data-size="15 ft" data-capacity="3 max" data-bed="1 Double Bed, 1 Single Bed" data-services="1 Side Table, Aircon Unit, Bathroom Sink & Mirror, Clothes Cabinets, Desk and Chair, Electric Fan, Electric Kettle, FREE Wi-Fi, Hot and Cold Shower, LED TV">
+        <img src="https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/morocco.jpg" alt="Morocco Room">
+        <div class="room-quick-info">
+          <h3>Morocco Room</h3>
+          <div class="room-price">₱1,500.00 / Night</div>
+        </div>
+      </div>
+      <div class="room" data-room="Paris Room" data-price="₱1,000.00 / Night" data-size="15 ft" data-capacity="2 max" data-bed="1 Double Bed" data-services="2-Seater Sofa, Aircon Unit, Bathroom Sink & Mirror, Clothes Cabinets, Desk and Chair, Electric Fan, Electric Kettle, FREE Wi-Fi, Hot and Cold Shower, LED TV">
+        <img src="https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/paris.jpg" alt="Paris Room">
+        <div class="room-quick-info">
+          <h3>Paris Room</h3>
+          <div class="room-price">₱1,000.00 / Night</div>
+        </div>
+      </div>
+      <div class="room" data-room="Portugal Room" data-price="₱3,200.00 / Night" data-size="30 ft" data-capacity="8 max" data-bed="4 Double Bed" data-services="Aircon Unit, Common Toilet and Bath, Desk and Chair, Electric Fan, Electric Kettle, FREE Wi-Fi, Hot and Cold Shower, LED TV, Outdoor Table & Chairs, Veranda">
+        <img src="https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/portugal.jpg" alt="Portugal Room">
+        <div class="room-quick-info">
+          <h3>Portugal Room</h3>
+          <div class="room-price">₱3,200.00 / Night</div>
+        </div>
+      </div>
+      <div class="room" data-room="Spain Room" data-price="₱1,600.00 / Night" data-size="20 ft" data-capacity="4 max" data-bed="1 Double Bed, 2 Single Bed" data-services="Aircon Unit, Bath Tub, Bathroom Sink & Mirror, Clothes Cabinets, Electric Fan, Electric Kettle, FREE Wi-Fi, Hot and Cold Shower, LED TV, Outdoor Table & Chairs, Terrace">
+        <img src="https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/spain.jpg" alt="Spain Room">
+        <div class="room-quick-info">
+          <h3>Spain Room</h3>
+          <div class="room-price">₱1,600.00 / Night</div>
+        </div>
+      </div>
+      <div class="room" data-room="Vietnam Room" data-price="₱2,000.00 / Night" data-size="25 ft" data-capacity="5 max" data-bed="1 Double Bed, 3 Single Bed" data-services="Aircon Unit, Bathroom Sink & Mirror, Common Toilet and Bath, Electric Fan, Electric Kettle, FREE Wi-Fi, Hot and Cold Shower, LED TV, Outdoor Table & Chairs, Terrace">
+        <img src="https://raw.githubusercontent.com/HansongProgramming/agguimangan-AR/main/source/vietnam.jpg" alt="Vietnam Room">
+        <div class="room-quick-info">
+          <h3>Vietnam Room</h3>
+          <div class="room-price">₱2,000.00 / Night</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Details Panel -->
+    <div class="room-title">
+      <h1 id="roomName">Macau Room</h1>
+      <p><h3 id="roomPrice">₱2,800.00</h3> / Night</p>
+      <button>Check In</button>
+    </div>
+
+    <div class="room-details">
+      <div class="left">
+        <p>Size:</p>
+        <p>Capacity:</p>
+        <p>Bed:</p>
+        <p>Services:</p>
+      </div>
+      <div class="right">
+        <p id="roomSize">30 ft</p>
+        <p id="roomCapacity">7 max</p>
+        <p id="roomBed">3 Double Bed, 1 Single Bed</p>
+        <p id="roomServices">Aircon Unit, Bathroom Sink & Mirror, Common Toilet and Bath, Electric Fan, Electric Kettle, FREE Wi-Fi, Hot and Cold Shower, Outdoor Table & Chairs, Terrace</p>
+        <button>View in 360 Degrees</button>
+      </div>
+    </div>
+  </div>
+
     </div>
 
     <div class="augmented-reality">
@@ -198,6 +236,50 @@ album.addEventListener("click", () => {
     top.style.transition = "transform 0.3s ease, opacity 0.6s ease";
   }, 300);
 });
+
+    const carousel = document.getElementById('roomCarousel');
+    const rooms = document.querySelectorAll('.room');
+
+    const roomName = document.getElementById('roomName');
+    const roomPrice = document.getElementById('roomPrice');
+    const roomSize = document.getElementById('roomSize');
+    const roomCapacity = document.getElementById('roomCapacity');
+    const roomBed = document.getElementById('roomBed');
+    const roomServices = document.getElementById('roomServices');
+
+    function updateRoomDetails(room) {
+      roomName.textContent = room.dataset.room;
+      roomPrice.textContent = room.dataset.price;
+      roomSize.textContent = room.dataset.size;
+      roomCapacity.textContent = room.dataset.capacity;
+      roomBed.textContent = room.dataset.bed;
+      roomServices.textContent = room.dataset.services;
+    }
+
+    // detect which room is centered
+    carousel.addEventListener('scroll', () => {
+      let closestRoom = null;
+      let closestDistance = Infinity;
+      const carouselRect = carousel.getBoundingClientRect();
+
+      rooms.forEach(room => {
+        const rect = room.getBoundingClientRect();
+        const roomCenter = rect.left + rect.width / 2;
+        const carouselCenter = carouselRect.left + carouselRect.width / 2;
+        const distance = Math.abs(carouselCenter - roomCenter);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestRoom = room;
+        }
+      });
+
+      if (closestRoom) {
+        updateRoomDetails(closestRoom);
+      }
+    });
+
+    // initialize with first room
+    updateRoomDetails(rooms[0]);
 </script>
 
 
