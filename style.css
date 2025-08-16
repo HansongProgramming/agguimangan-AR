@@ -263,12 +263,20 @@ display: flex;
 
     /* Details section */
     .room-title {
-      margin-top: 20px;
-      text-align: center;
+        display: flex;
+        flex-direction: row;
+        padding: 1rem;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .room-title h1 {
       margin: 0;
+    }
+
+    .room-title button{
+        width: fit-content;
+        height: fit-content;
     }
 
     .room-details {
@@ -277,11 +285,13 @@ display: flex;
       gap: 40px;
       margin-top: 20px;
       text-align: left;
+      padding: 1rem;
     }
 
     .room-details .left p,
     .room-details .right p {
       margin: 6px 0;
+      color: #565656;
     }
 
     .room-details button {
