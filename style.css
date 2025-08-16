@@ -234,6 +234,7 @@ display: flex;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       padding: 10px 0;
+      padding: 1rem;
     }
 
     .room-carousel::-webkit-scrollbar {
