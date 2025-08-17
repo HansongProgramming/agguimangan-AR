@@ -20,10 +20,28 @@ body {
 button {
     color: white;
     background-color: #0A986C;
-    border-radius: 80px;
+    border-radius: 360px;
     font-size: 1.2rem;
     padding: 0.5rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
+
+.active{
+    color: white;
+    background-color: #0A986C;
+    transform: translateY(-40%);
+}
+
+.inactive{
+    opacity: 0.5;
+    background-color: transparent;
+    border: none;;
+}
+
+.inactive img{
+    filter: invert(100%);
+    transform: scale(0.8);
+  }
 
 .section {
     display: flex;
@@ -169,7 +187,6 @@ display: flex;
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
 }
 
-/* Stacked look with tilt + protrude */
 .photo:nth-child(1) { z-index: 4; transform: translateY(0px) rotate(0deg); }
 .photo:nth-child(2) { z-index: 3; transform: translateY(-5px) scale(0.98) rotate(-2deg); }
 .photo:nth-child(3) { z-index: 2; transform: translateY(-10px) scale(0.96) rotate(2deg); }
@@ -196,7 +213,7 @@ display: flex;
     }
 
     .carousel-track img {
-      width: 250px; /* adjust size */
+      width: 250px; 
       height: auto;
       margin: 0 10px;
       border-radius: 12px;
@@ -229,7 +246,6 @@ display: flex;
       margin: auto;
     }
 
-    /* Carousel */
     .room-carousel {
       display: flex;
       gap: 20px;
@@ -265,7 +281,6 @@ display: flex;
       padding: 10px;
     }
 
-    /* Details section */
     .room-title {
         display: flex;
         flex-direction: row;
@@ -317,12 +332,14 @@ display: flex;
     padding: 1rem;
     z-index: 1000;
     display: flex;
+    height: 8vh;
+    align-items: center;
   justify-content: space-around;
 }
 
 .modal {
     position: fixed; inset: 0;
-    display: none; /* toggled to flex in JS */
+    display: none;
     align-items: center; justify-content: center;
     background: rgba(0,0,0,.7);
     z-index: 9999;
