@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/2.1.8/aframe/build/aframe-ar.js"></script>
+  </head>
+  <body style="margin: 0; overflow: hidden;">
+    <!-- Hidden video element (with cross-origin and playsinline for mobile) -->
+    <video id="vid" src="https://agguimangan.webcapstone.com/vids/hostel.mp4" 
+           crossorigin="anonymous" 
+           webkit-playsinline playsinline 
+           preload="auto" 
+           style="display:none;">
+    </video>
+
+    <a-scene embedded arjs>
+      <!-- Marker with id=5 -->
+      <a-marker type="barcode" value="5">
+        <!-- Map video onto a plane -->
+        <a-video src="#vid" width="3" height="2" rotation="-90 0 0"></a-video>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+    </a-scene>
+
+    <script>
+      // Start video after user taps screen (needed for audio on mobile)
+      document.body.addEventListener('click', () => {
+        const vid = document.getElementById('vid');
+        vid.play();
+      });
+    </script>
+  </body>
+</html>
