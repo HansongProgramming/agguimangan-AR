@@ -1,33 +1,54 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/2.1.8/aframe/build/aframe-ar.js"></script>
-  </head>
-  <body style="margin: 0; overflow: hidden;">
-    <!-- Hidden video element (with cross-origin and playsinline for mobile) -->
-    <video id="vid" src="https://agguimangan.webcapstone.com/vids/hostel.mp4" 
-           crossorigin="anonymous" 
-           webkit-playsinline playsinline 
-           preload="auto" 
-           style="display:none;">
-    </video>
+<head>
+  <title>AR.js Video Example</title>
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; overflow: hidden; width: 100%; height: 100%; }
+    #vid { display: none; } /* hide the HTML video element */
+  </style>
+</head>
+<body>
+  <!-- Hidden HTML5 video (linked file) -->
+  <video id="vid" src="https://agguimangan.webcapstone.com/vids/hostel.mp4"
+         crossorigin="anonymous"
+         webkit-playsinline playsinline
+         preload="auto"
+         loop>
+  </video>
 
-    <a-scene embedded arjs>
-      <!-- Marker with id=5 -->
-      <a-marker type="barcode" value="5">
-        <!-- Map video onto a plane -->
-        <a-video src="#vid" width="3" height="2" rotation="-90 0 0"></a-video>
-      </a-marker>
+  <a-scene embedded arjs="detectionMode: mono_and_matrix; matrixCodeType: 5x5;">
+    <!-- Example markers for images -->
+    <a-marker type="barcode" value="1">
+      <a-image id="img-1" position="0 0.5 0" rotation="-90 0 0"></a-image>
+    </a-marker>
+    <a-marker type="barcode" value="2">
+      <a-image id="img-2" position="0 0.5 0" rotation="-90 0 0"></a-image>
+    </a-marker>
+    <a-marker type="barcode" value="4">
+      <a-image id="img-4" position="0 0.5 0" rotation="-90 0 0"></a-image>
+    </a-marker>
 
-      <a-entity camera></a-entity>
-    </a-scene>
+    <!-- 🎥 Marker ID 5 plays video -->
+    <a-marker type="barcode" value="5">
+      <a-video id="video-plane" src="#vid" position="0 0.5 0"
+               rotation="-90 0 0"
+               width="3" height="2">
+      </a-video>
+    </a-marker>
 
-    <script>
-      // Start video after user taps screen (needed for audio on mobile)
-      document.body.addEventListener('click', () => {
-        const vid = document.getElementById('vid');
-        vid.play();
-      });
-    </script>
-  </body>
+    <a-entity camera></a-entity>
+  </a-scene>
+
+  <script>
+    // ensure video plays on user gesture (required for audio on mobile)
+    document.body.addEventListener('click', () => {
+      const vid = document.getElementById('vid');
+      if (vid.paused) {
+        vid.play().catch(err => console.warn("Video play failed:", err));
+      }
+    });
+  </script>
+</body>
 </html>
