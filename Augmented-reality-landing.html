@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AR.js Video Example</title>
+  <title>AR.js Video Example (Dropbox)</title>
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
   <style>
@@ -10,7 +10,9 @@
   </style>
 </head>
 <body>
-  <video id="vid" src="https://agguimangan.webcapstone.com/vids/hostel.mp4"
+  <!-- Dropbox direct video link (use ?raw=1 for direct streaming) -->
+  <video id="vid" 
+         src="https://www.dropbox.com/scl/fi/2tvf3vofrpf56s4xkc1b4/hostel.mp4?rlkey=3bzjccnrdu06p8g1tyv2z37yj&st=ht7g7b9a&raw=1"
          crossorigin="anonymous"
          webkit-playsinline playsinline
          preload="auto"
@@ -29,16 +31,13 @@
   </a-scene>
 
   <script>
+    // User gesture is required for autoplay w/ audio
     document.body.addEventListener('click', () => {
       const vid = document.getElementById('vid');
       if (vid.paused) {
         vid.play().catch(err => console.warn("Video play failed:", err));
       }
     });
-
-    fetch("https://agguimangan.webcapstone.com/vids/hostel.mp4", { method: "HEAD" })
-  .then(r => console.log(r.headers.get("Access-Control-Allow-Origin")));
-
   </script>
 </body>
 </html>
