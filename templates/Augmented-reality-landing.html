@@ -6,36 +6,45 @@
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
   <style>
     html, body { margin: 0; padding: 0; overflow: hidden; width: 100%; height: 100%; }
-    #vid { display: none; } 
+    /* keep video in DOM but invisible */
+    #vid { 
+      opacity: 0; 
+      position: absolute; 
+      left: -9999px; 
+    }
   </style>
 </head>
 <body>
-  <!-- Use your FastAPI proxy instead of Dropbox -->
+  <!-- Video asset -->
   <video id="vid" 
          src="/video"
          crossorigin="anonymous"
-         webkit-playsinline playsinline
-         preload="auto"
-         loop>
+         muted
+         autoplay
+         loop
+         playsinline
+         webkit-playsinline>
   </video>
 
   <a-scene embedded arjs="detectionMode: mono_and_matrix; matrixCodeType: 5x5;">
     <a-marker type="barcode" value="5">
-      <a-video id="video-plane" src="#vid" position="0 0.5 0"
+      <!-- Use a-plane with material binding -->
+      <a-plane material="src: #vid" 
+               position="0 0.5 0"
                rotation="-90 0 0"
                width="3" height="2">
-      </a-video>
+      </a-plane>
     </a-marker>
 
     <a-entity camera></a-entity>
   </a-scene>
 
   <script>
+    const vid = document.getElementById('vid');
+
+    // ensure video starts after user gesture
     document.body.addEventListener('click', () => {
-      const vid = document.getElementById('vid');
-      if (vid.paused) {
-        vid.play().catch(err => console.warn("Video play failed:", err));
-      }
+      vid.play().catch(err => console.warn("Video play failed:", err));
     });
   </script>
 </body>
