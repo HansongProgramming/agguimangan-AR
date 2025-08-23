@@ -29,13 +29,21 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 10%;
+      width: fit-content;
+      background-color: transparent;
+      outline: none;
+      border: none;
+    }
+
+    img{
+      width: 40%;
+      height: 20%;
     }
 
   </style>
 </head>
 <body>
-  <button onclick="tapped()" class="overlay">
+  <button id="tapButton" onclick="tapped()" class="overlay">
     <img src="/static/source/tap.svg" alt="tap" >
   </button>
   <!-- Hidden video element -->
