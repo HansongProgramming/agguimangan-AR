@@ -19,9 +19,24 @@
       width: 1px; height: 1px;
       opacity: 0;
     }
+
+    .overlay{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
   </style>
 </head>
 <body>
+  <button onclick="tapped()" class="overlay">
+    <img src="/static/source/tap.svg" alt="tap" >
+  </button>
   <!-- Hidden video element -->
   <video id="vid"
          src="/static/source/part1.mp4"
@@ -64,6 +79,11 @@
       // Remove listener after first click
       document.body.removeEventListener('click', playVideo);
     };
+
+      function tapped() {
+        const button = document.getElementById('tapButton');
+        button.style.display = 'none';
+      }
 
     document.body.addEventListener('click', playVideo);
   </script>
