@@ -42,33 +42,10 @@
         animation: fadeIn 2s forwards;
         color: white;
       }
-      @keyframes fadeIn {
-        to {
-          opacity: 1;
-        }
-      }
       
       img {
         width: 40%;
         height: 20%;
-      }
-
-      .overlay {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 10;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: fit-content;
-        background-color: transparent;
-        outline: none;
-        border: none;
-        opacity: 0;
-        animation: fadeIn 2s forwards;
-        color: white;
       }
 
       .overlay2 {
@@ -89,6 +66,7 @@
         animation-delay: 7s;
         color: white;
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+        font-size: 1.5rem;
       }
 
       @keyframes fadeIn {
@@ -100,7 +78,7 @@
   </head>
   <body>
     <button id="tapButton" onclick="tapped()" class="overlay"><img src="/static/source/tap.png" alt="tap" /></button>
-    <button id="finishButton" class="overlay2" style="display: none;" onclick="window.location.href='/main';">
+    <button id="finishButton" class="overlay2" onclick="window.location.href='/main';">
       Tap here to start Booking!
     </button>
 
@@ -131,11 +109,6 @@
           .catch((err) => console.warn('Video play failed:', err))
         document.body.removeEventListener('click', playVideo)
       }
-      
-      vid.addEventListener('ended', () => {
-        const button = document.getElementById('finishButton');
-        button.style.display = 'block';
-      })
       
       function tapped() {
         const button = document.getElementById('tapButton')
