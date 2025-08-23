@@ -1,100 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>AR.js Video Example (FastAPI)</title>
-  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
-  <style>
-    html, body {
-      margin: 0; padding: 0;
-      width: 100%; height: 100%;
-      overflow: hidden;
-    }
-
-    /* Keep video hidden but still in DOM */
-    #vid {
-      position: absolute;
-      top: 0; left: 0;
-      width: 1px; height: 1px;
-      opacity: 0;
-    }
-
-    .overlay{
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 10;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: fit-content;
-      background-color: transparent;
-      outline: none;
-      border: none;
-    }
-
-    img{
-      width: 40%;
-      height: 20%;
-    }
-
-  </style>
-</head>
-<body>
-  <button id="tapButton" onclick="tapped()" class="overlay">
-    <img src="/static/source/tap.svg" alt="tap" >
-  </button>
-  <!-- Hidden video element -->
-  <video id="vid"
-         src="/static/source/part1.mp4"
-         type="video/mp4"
-         playsinline
-         webkit-playsinline
-         muted
-         loop
-         preload="auto">
-  </video>
-
-  <!-- A-Frame scene with AR.js -->
-  <a-scene embedded arjs="detectionMode: mono_and_matrix; matrixCodeType: 5x5;">
-    <a-marker type="barcode" value="5" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
-      <!-- Plane showing the video -->
-      <a-plane id="video-plane"
-               src="#vid"
-               position="0 0.5 0"
-               rotation="-90 0 0"
-               width="3" height="2">
-      </a-plane>
-    </a-marker>
-
-    <a-entity camera></a-entity>
-  </a-scene>
-
-  <script>
-    const vid = document.getElementById('vid');
-
-    // Check when video has loaded
-    vid.addEventListener('loadeddata', () => {
-      console.log("Video loaded! Duration:", vid.duration, "seconds");
-    });
-
-    // Trigger video play on first user interaction
-    const playVideo = () => {
-      vid.play()
-        .then(() => console.log("Video playing!"))
-        .catch(err => console.warn("Video play failed:", err));
-      // Remove listener after first click
-      document.body.removeEventListener('click', playVideo);
-    };
-
-      function tapped() {
-        const button = document.getElementById('tapButton');
-        button.style.display = 'none';
+  <head>
+    <meta charset="UTF-8" />
+    <title>AR.js Video Example (FastAPI)</title>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
       }
+      
+      /* Keep video hidden but still in DOM */
+      #vid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+      }
+      
+      .overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: fit-content;
+        background-color: transparent;
+        outline: none;
+        border: none;
+        opacity: 0;
+        animation: fadeIn 2s forwards;
+        color: white;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+      
+      img {
+        width: 40%;
+        height: 20%;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="tapButton" onclick="tapped()" class="overlay"><img src="/static/source/tap.png" alt="tap" /></button>
+    <!-- Hidden video element -->
+    <video id="vid" src="/static/source/part1.mp4" type="video/mp4" playsinline webkit-playsinline muted loop preload="auto"></video>
 
-    document.body.addEventListener('click', playVideo);
-  </script>
-</body>
+    <button id="finishButton" class="overlay" style="display: none;" onclick="window.location.href='/main';">
+      Tap here to start Booking!
+    </button>
+
+    <!-- A-Frame scene with AR.js -->
+    <a-scene embedded arjs="detectionMode: mono_and_matrix; matrixCodeType: 5x5;">
+      <a-marker type="barcode" value="5" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
+        <!-- Plane showing the video -->
+        <a-plane id="video-plane" src="#vid" position="0 0.5 0" rotation="-90 0 0" width="3" height="2"></a-plane>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+    </a-scene>
+
+    <script>
+      const vid = document.getElementById('vid')
+      
+      vid.addEventListener('loadeddata', () => {
+        console.log('Video loaded! Duration:', vid.duration, 'seconds')
+      })
+      
+      const playVideo = () => {
+        vid
+          .play()
+          .then(() => console.log('Video playing!'))
+          .catch((err) => console.warn('Video play failed:', err))
+        document.body.removeEventListener('click', playVideo)
+      }
+      
+      vid.addEventListener('ended', () => {
+        const button = document.getElementById('finishButton');
+        button.style.display = 'block';
+      })
+      
+      function tapped() {
+        const button = document.getElementById('tapButton')
+        button.style.display = 'none'
+      }
+      
+      document.body.addEventListener('click', playVideo)
+    </script>
+  </body>
 </html>
