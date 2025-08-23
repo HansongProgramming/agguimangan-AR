@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AR.js Video Example (Dropbox)</title>
+  <title>AR.js Video Example (FastAPI Proxy)</title>
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
   <style>
@@ -10,8 +10,9 @@
   </style>
 </head>
 <body>
+  <!-- Use your FastAPI proxy instead of Dropbox -->
   <video id="vid" 
-         src="https://www.dropbox.com/scl/fi/2tvf3vofrpf56s4xkc1b4/hostel.mp4?rlkey=3bzjccnrdu06p8g1tyv2z37yj&st=ht7g7b9a&raw=1"
+         src="/video"
          crossorigin="anonymous"
          webkit-playsinline playsinline
          preload="auto"
