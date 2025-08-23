@@ -1,35 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>AR.js Video Example (FastAPI Proxy)</title>
+  <meta charset="UTF-8">
+  <title>AR.js Video Example (FastAPI)</title>
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
   <style>
-    html, body { margin: 0; padding: 0; overflow: hidden; width: 100%; height: 100%; }
+    html, body {
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
+      overflow: hidden;
+    }
+
+    /* Keep video hidden but still in DOM */
     #vid {
       position: absolute;
       top: 0; left: 0;
-      width: 1px; height: 1px;   /* keep it tiny but in DOM */
+      width: 1px; height: 1px;
       opacity: 0;
     }
   </style>
 </head>
 <body>
-  <!-- keep video in DOM -->
+  <!-- Hidden video element -->
   <video id="vid"
          src="/static/source/part1.mp4"
          type="video/mp4"
          playsinline
          webkit-playsinline
          muted
-         autoplay
-         loop>
+         loop
+         preload="auto">
   </video>
 
+  <!-- A-Frame scene with AR.js -->
   <a-scene embedded arjs="detectionMode: mono_and_matrix; matrixCodeType: 5x5;">
     <a-marker type="barcode" value="5">
-      <!-- plane showing video -->
-      <a-plane src="#vid"
+      <!-- Plane showing the video -->
+      <a-plane id="video-plane"
+               src="#vid"
                position="0 0.5 0"
                rotation="-90 0 0"
                width="3" height="2">
@@ -41,13 +50,22 @@
 
   <script>
     const vid = document.getElementById('vid');
+
+    // Check when video has loaded
     vid.addEventListener('loadeddata', () => {
-      console.log("Video loaded, duration:", vid.duration);
+      console.log("Video loaded! Duration:", vid.duration, "seconds");
     });
 
-    document.body.addEventListener('click', () => {
-      vid.play().catch(err => console.warn("Play failed:", err));
-    });
+    // Trigger video play on first user interaction
+    const playVideo = () => {
+      vid.play()
+        .then(() => console.log("Video playing!"))
+        .catch(err => console.warn("Video play failed:", err));
+      // Remove listener after first click
+      document.body.removeEventListener('click', playVideo);
+    };
+
+    document.body.addEventListener('click', playVideo);
   </script>
 </body>
 </html>
