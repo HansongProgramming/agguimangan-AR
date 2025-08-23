@@ -52,16 +52,60 @@
         width: 40%;
         height: 20%;
       }
+
+      .overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: fit-content;
+        background-color: transparent;
+        outline: none;
+        border: none;
+        opacity: 0;
+        animation: fadeIn 2s forwards;
+        color: white;
+      }
+
+      .overlay2 {
+        position: absolute;
+        top: 80%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: fit-content;
+        background-color: transparent;
+        outline: none;
+        border: none;
+        opacity: 0;
+        animation: fadeIn 2s forwards;
+        animation-delay: 7s;
+        color: white;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+      }
+
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
     </style>
   </head>
   <body>
     <button id="tapButton" onclick="tapped()" class="overlay"><img src="/static/source/tap.png" alt="tap" /></button>
-    <!-- Hidden video element -->
-    <video id="vid" src="/static/source/part1.mp4" type="video/mp4" playsinline webkit-playsinline muted loop preload="auto"></video>
-
-    <button id="finishButton" class="overlay" style="display: none;" onclick="window.location.href='/main';">
+    <button id="finishButton" class="overlay2" style="display: none;" onclick="window.location.href='/main';">
       Tap here to start Booking!
     </button>
+
+    <!-- Hidden video element -->
+    <video id="vid" src="/static/source/part1.mp4" type="video/mp4" playsinline webkit-playsinline muted loop preload="auto"></video>
 
     <!-- A-Frame scene with AR.js -->
     <a-scene embedded arjs="detectionMode: mono_and_matrix; matrixCodeType: 5x5;">
