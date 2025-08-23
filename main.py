@@ -24,3 +24,21 @@ async def proxy_video():
             media_type="video/mp4",
             headers={"Access-Control-Allow-Origin": "*", "Content-Type": "video/mp4"}
         )
+
+@app.get("/landing", response_class=HTMLResponse)
+async def landing():
+    with open("templates/Augmented-reality-landing.html", "r", encoding="utf-8") as f:
+        html_content = f.read()
+    return HTMLResponse(content=html_content, status_code=200)
+
+@app.get("/ar", response_class=HTMLResponse)
+async def ar():
+    with open("templates/Augmented-reality.html", "r", encoding="utf-8") as f:
+        html_content = f.read()
+    return HTMLResponse(content=html_content, status_code=200)
+
+@app.get("/main", response_class=HTMLResponse)
+async def main():
+    with open("templates/main.html", "r", encoding="utf-8") as f:
+        html_content = f.read()
+    return HTMLResponse(content=html_content, status_code=200)
