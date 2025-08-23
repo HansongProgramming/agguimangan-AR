@@ -22,5 +22,5 @@ async def proxy_video():
         return StreamingResponse(
             r.aiter_bytes(),
             media_type="video/mp4",
-            headers={"Access-Control-Allow-Origin": "*"}
+            headers={"Access-Control-Allow-Origin": "*", "Content-Type": "video/mp4"}
         )
