@@ -10,7 +10,6 @@
   </style>
 </head>
 <body>
-  <!-- Dropbox direct video link (use ?raw=1 for direct streaming) -->
   <video id="vid" 
          src="https://www.dropbox.com/scl/fi/2tvf3vofrpf56s4xkc1b4/hostel.mp4?rlkey=3bzjccnrdu06p8g1tyv2z37yj&st=ht7g7b9a&raw=1"
          crossorigin="anonymous"
@@ -31,7 +30,6 @@
   </a-scene>
 
   <script>
-    // User gesture is required for autoplay w/ audio
     document.body.addEventListener('click', () => {
       const vid = document.getElementById('vid');
       if (vid.paused) {
