@@ -47,7 +47,7 @@
         width: 40%;
         height: 20%;
       }
-
+      
       .overlay2 {
         position: absolute;
         top: 80%;
@@ -68,7 +68,7 @@
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
         font-size: 1.5rem;
       }
-
+      
       @keyframes fadeIn {
         to {
           opacity: 1;
@@ -78,12 +78,10 @@
   </head>
   <body>
     <button id="tapButton" onclick="tapped()" class="overlay"><img src="/static/source/tap.png" alt="tap" /></button>
-    <button id="finishButton" class="overlay2" onclick="window.location.href='/main';">
-      Tap here to start Booking!
-    </button>
+    <button id="finishButton" class="overlay2" onclick="window.location.href='/main';">Tap here to start Booking!</button>
 
     <!-- Hidden video element -->
-    <video id="vid" src="/static/source/PARAGRAPH 1 VIDEO.mp4" type="video/mp4" playsinline webkit-playsinline muted loop preload="auto"></video>
+    <video id="vid" src="/static/source/PARAGRAPH 1 VIDEO.mp4" type="video/mp4" playsinline webkit-playsinline loop preload="auto"></video>
 
     <!-- A-Frame scene with AR.js -->
     <a-scene embedded arjs="detectionMode: mono_and_matrix; matrixCodeType: 5x5;">
@@ -102,20 +100,15 @@
         console.log('Video loaded! Duration:', vid.duration, 'seconds')
       })
       
-      const playVideo = () => {
-        vid
-          .play()
-          .then(() => console.log('Video playing!'))
-          .catch((err) => console.warn('Video play failed:', err))
-        document.body.removeEventListener('click', playVideo)
-      }
-      
       function tapped() {
         const button = document.getElementById('tapButton')
         button.style.display = 'none'
-      }
       
-      document.body.addEventListener('click', playVideo)
+        vid
+          .play()
+          .then(() => console.log('Video playing with audio!'))
+          .catch((err) => console.warn('Video play failed:', err))
+      }
     </script>
   </body>
 </html>
