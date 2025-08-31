@@ -6,130 +6,47 @@
     <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
     <style>
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-      }
-
-      #vid {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 1px;
-        height: 1px;
-        opacity: 0;
-      }
-
+      html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; }
       .overlay {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 10;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: fit-content;
-        background-color: transparent;
-        outline: none;
-        border: none;
-        opacity: 0;
-        animation: fadeIn 2s forwards;
-        color: white;
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        z-index: 10; display: flex; justify-content: center; align-items: center;
+        background: transparent; border: none; opacity: 0;
+        animation: fadeIn 2s forwards; color: white;
       }
-
-      img {
-        width: 40%;
-        height: 20%;
-      }
-
+      img { width: 40%; height: 20%; }
       .overlay2 {
-        position: absolute;
-        top: 80%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 10;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: fit-content;
-        background-color: transparent;
-        outline: none;
-        border: none;
-        opacity: 0;
-        animation: fadeIn 2s forwards;
-        animation-delay: 7s;
-        color: white;
-        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
-        font-size: 1.5rem;
+        position: absolute; top: 80%; left: 50%; transform: translate(-50%, -50%);
+        z-index: 10; display: flex; justify-content: center; align-items: center;
+        background: transparent; border: none; opacity: 0;
+        animation: fadeIn 2s forwards; animation-delay: 7s;
+        color: white; text-shadow: 1px 1px 4px rgba(0,0,0,0.8); font-size: 1.5rem;
       }
-
-      @keyframes fadeIn {
-        to {
-          opacity: 1;
-        }
-      }
+      @keyframes fadeIn { to { opacity:1; } }
     </style>
   </head>
   <body>
     <button id="tapButton" onclick="tapped()" class="overlay">
       <img src="/static/source/tap.png" alt="tap" />
     </button>
-    <button
-      id="finishButton"
-      class="overlay2"
-      onclick="window.location.href='/main';"
-    >
+    <button id="finishButton" class="overlay2" onclick="window.location.href='/main';">
       Tap here to start Booking!
     </button>
 
-    <!-- Hidden video element -->
-    <video
-      id="vid"
-      src="/static/source/PARAGRAPH 1 VIDEO.mp4"
-      type="video/mp4"
-      playsinline
-      webkit-playsinline
-      loop
-      preload="auto"
-    ></video>
+    <a-scene vr-mode-ui="enabled: false" embedded
+             arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
+      <a-assets>
+        <video id="vid" src="/static/source/PARAGRAPH 1 VIDEO.mp4"
+               preload="auto" playsinline webkit-playsinline loop crossorigin="anonymous"></video>
+      </a-assets>
 
-<a-scene
-  vr-mode-ui="enabled: false"
-  embedded
-  arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
->
-  <a-assets>
-    <video id="vid" src="/static/source/PARAGRAPH 1 VIDEO.mp4"
-           preload="auto" playsinline webkit-playsinline loop crossorigin="anonymous">
-    </video>
-  </a-assets>
+      <a-nft type="nft"
+             url="https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/image-tracking/nft/trex/trex-image/trex"
+             smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
+        <a-plane id="video-plane" src="#vid" position="0 0 0" rotation="0 0 0" width="3" height="2"></a-plane>
+      </a-nft>
 
-  <a-nft
-    type="nft"
-    url="https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/image-tracking/nft/trex/trex-image/trex"
-    smooth="true"
-    smoothCount="5"
-    smoothTolerance="0.01"
-    smoothThreshold="5"
-  >
-    <a-plane
-      id="video-plane"
-      src="#vid"
-      position="0 0 0"
-      rotation="0 0 0"
-      width="3"
-      height="2"
-    ></a-plane>
-  </a-nft>
-
-  <a-entity camera></a-entity>
-</a-scene>
-
+      <a-entity camera></a-entity>
+    </a-scene>
 
     <script>
       const vid = document.getElementById("vid");
@@ -141,10 +58,9 @@
       function tapped() {
         const button = document.getElementById("tapButton");
         button.style.display = "none";
-
         vid.play()
           .then(() => console.log("Video playing with audio!"))
-          .catch((err) => console.warn("Video play failed:", err));
+          .catch(err => console.warn("Video play failed:", err));
       }
 
       window.addEventListener("arjs-nft-loaded", (event) => {
