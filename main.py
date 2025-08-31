@@ -46,3 +46,9 @@ def debug_static():
     }
 
 app.include_router(debug)
+
+@app.get("/proxy/")
+async def proxy(url: str):
+    async with httpx.AsyncClient() as client:
+        r = await client.get(url)
+    return Response(r.content, media_type=r.headers.get("content-type", "application/octet-stream"))
