@@ -98,33 +98,38 @@
       preload="auto"
     ></video>
 
-    <a-scene
-      vr-mode-ui="enabled: false"
-      embedded
-      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
-    >
-      <!-- NFT marker -->
-      <a-nft
-        type="nft"
-        url="https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/image-tracking/nft/trex/trex-image/trex"
-        smooth="true"
-        smoothCount="5"
-        smoothTolerance="0.01"
-        smoothThreshold="5"
-      > 
-        <!-- Place video plane on top of detected NFT -->
-        <a-plane
-          id="video-plane"
-          src="#vid"
-          position="0 0 0"
-          rotation="-90 0 0"
-          width="3"
-          height="2"
-        ></a-plane>
-      </a-nft>
+<a-scene
+  vr-mode-ui="enabled: false"
+  embedded
+  arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+>
+  <a-assets>
+    <video id="vid" src="/static/source/PARAGRAPH 1 VIDEO.mp4"
+           preload="auto" playsinline webkit-playsinline loop crossorigin="anonymous">
+    </video>
+  </a-assets>
 
-      <a-entity camera></a-entity>
-    </a-scene>
+  <a-nft
+    type="nft"
+    url="https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/image-tracking/nft/trex/trex-image/trex"
+    smooth="true"
+    smoothCount="5"
+    smoothTolerance="0.01"
+    smoothThreshold="5"
+  >
+    <a-plane
+      id="video-plane"
+      src="#vid"
+      position="0 0 0"
+      rotation="0 0 0"
+      width="3"
+      height="2"
+    ></a-plane>
+  </a-nft>
+
+  <a-entity camera></a-entity>
+</a-scene>
+
 
     <script>
       const vid = document.getElementById("vid");
