@@ -106,7 +106,7 @@
       <!-- NFT marker -->
       <a-nft
         type="nft"
-        url="https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/nft/icon1"
+        url="https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/image-tracking/nft/trex/trex-image/trex"
         smooth="true"
         smoothCount="5"
         smoothTolerance="0.01"
@@ -141,6 +141,10 @@
           .then(() => console.log("Video playing with audio!"))
           .catch((err) => console.warn("Video play failed:", err));
       }
+
+      window.addEventListener("arjs-nft-loaded", (event) => {
+        console.log("NFT markers loaded:", event.detail);
+      });
     </script>
   </body>
 </html>
