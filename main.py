@@ -33,19 +33,16 @@ async def main():
         html_content = f.read()
     return HTMLResponse(content=html_content, status_code=200)
 
-@app.get("/debug-nft")
-async def debug_nft():
-    files = os.listdir("static/nft")
-    return {"files": files}
+debug = APIRouter()
 
-router = APIRouter()
-
-@router.get("/debug-nft")
-def debug_nft():
+@debug.get("/debug-static")
+def debug_static():
     base = "static/nft"
     return {
         "cwd": os.getcwd(),
-        "exists": os.path.exists(base),
-        "files": os.listdir(base) if os.path.exists(base) else "missing"
+        "static_exists": os.path.exists("static"),
+        "nft_exists": os.path.exists(base),
+        "nft_files": os.listdir(base) if os.path.exists(base) else "none"
     }
-app.include_router(router)
+
+app.include_router(debug)
