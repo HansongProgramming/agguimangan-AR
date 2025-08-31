@@ -2,11 +2,10 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 import httpx
+from fastapi import APIRouter
 import os
 
 app = FastAPI()
-
-DROPBOX_URL = "https://limewire.com/d/6lqdc#50BxT4M5X7"
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -38,3 +37,15 @@ async def main():
 async def debug_nft():
     files = os.listdir("static/nft")
     return {"files": files}
+
+router = APIRouter()
+
+@router.get("/debug-nft")
+def debug_nft():
+    base = "static/nft"
+    return {
+        "cwd": os.getcwd(),
+        "exists": os.path.exists(base),
+        "files": os.listdir(base) if os.path.exists(base) else "missing"
+    }
+app.include_router(router)
