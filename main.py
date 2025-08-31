@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 import httpx
+import os
 
 app = FastAPI()
 
@@ -32,3 +33,8 @@ async def main():
     with open("templates/main.html", "r", encoding="utf-8") as f:
         html_content = f.read()
     return HTMLResponse(content=html_content, status_code=200)
+
+@app.get("/debug-nft")
+async def debug_nft():
+    files = os.listdir("static/nft")
+    return {"files": files}
