@@ -32,21 +32,22 @@
       Tap here to start Booking!
     </button>
 
-    <a-scene vr-mode-ui="enabled: false" embedded
-             arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
-      <a-assets>
-        <video id="vid" src="/static/source/PARAGRAPH 1 VIDEO.mp4"
-               preload="auto" playsinline webkit-playsinline loop crossorigin="anonymous"></video>
-      </a-assets>
+    <a-scene embedded arjs>
+      <a-nft
+        type="nft"
+        url="https://raw.githack.com/AR-js-org/AR.js/master/dataNFT/trex/trex">
 
-      <a-nft type="nft"
-             url="https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/image-tracking/nft/trex/trex-image/trex"
-             smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="5">
-        <a-plane id="video-plane" src="#vid" position="0 0 0" rotation="0 0 0" width="3" height="2"></a-plane>
+        <a-text 
+          value="NFT detected!" 
+          color="blue" 
+          position="0 1 0" 
+          scale="2 2 2">
+        </a-text>
+
       </a-nft>
-
       <a-entity camera></a-entity>
     </a-scene>
+
 
     <script>
       const vid = document.getElementById("vid");
