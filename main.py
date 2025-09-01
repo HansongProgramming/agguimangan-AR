@@ -1,37 +1,53 @@
-from fastapi import FastAPI
-from fastapi.responses import HTMLResponse, StreamingResponse
+from fastapi import FastAPI, APIRouter
+from fastapi.responses import HTMLResponse, Response
 from fastapi.staticfiles import StaticFiles
+from contextlib import asynccontextmanager
 import httpx
-from fastapi import APIRouter
 import os
 
-app = FastAPI()
+from backend.routes.users import router as user_router
+from backend.routes.bookings import router as booking_router
+from backend.database import engine, Base
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield
+    await engine.dispose()
+
+
+app = FastAPI(lifespan=lifespan)
+
+app.include_router(user_router)
+app.include_router(booking_router)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def home():
     with open("templates/index.html", "r", encoding="utf-8") as f:
-        html_content = f.read()
-    return HTMLResponse(content=html_content, status_code=200)
+        return HTMLResponse(content=f.read(), status_code=200)
+
 
 @app.get("/landing", response_class=HTMLResponse)
 async def landing():
     with open("templates/Augmented-reality-landing.html", "r", encoding="utf-8") as f:
-        html_content = f.read()
-    return HTMLResponse(content=html_content, status_code=200)
+        return HTMLResponse(content=f.read(), status_code=200)
+
 
 @app.get("/ar", response_class=HTMLResponse)
 async def ar():
     with open("templates/Augmented-reality.html", "r", encoding="utf-8") as f:
-        html_content = f.read()
-    return HTMLResponse(content=html_content, status_code=200)
+        return HTMLResponse(content=f.read(), status_code=200)
+
 
 @app.get("/main", response_class=HTMLResponse)
 async def main():
     with open("templates/main.html", "r", encoding="utf-8") as f:
-        html_content = f.read()
-    return HTMLResponse(content=html_content, status_code=200)
+        return HTMLResponse(content=f.read(), status_code=200)
+
 
 debug = APIRouter()
 
