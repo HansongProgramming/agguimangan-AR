@@ -140,6 +140,20 @@ button {
 .amenities{
     padding: 1rem;
 }
+.menu{
+  width: 100%;
+  height: 20%;
+  display: flex;
+  overflow-x: scroll;
+}
+
+.menu img{
+  width: 100%;
+  height: 40%;
+  border-radius: 12px;
+  margin-right: 1rem;
+  object-fit: fill;
+}
 
 .cards{
     width: 100%;
