@@ -129,10 +129,10 @@
         embedded arjs='trackingMethod: best; sourceType: webcam; debugUIEnabled: false;'>
 
         <a-assets>
-            <video src="/static/source/PARAGRAPH 1 VIDEO.mp4"
-                preload="auto" id="vid" response-type="arraybuffer" loop
-                crossorigin webkit-playsinline autoplay muted playsinline>
-            </video>
+          <video src="/static/source/PARAGRAPH 1 VIDEO.mp4"
+            preload="auto" id="vid" response-type="arraybuffer" loop
+            crossorigin webkit-playsinline playsinline autoplay>
+        </video>
         </a-assets>
 
         <a-nft
@@ -159,16 +159,21 @@
   });
 
 function tapped() {
-  document.getElementById("tapButton").style.display = "none";
+  const btn = document.getElementById("tapButton");
+  btn.style.display = "none";
+
+  vid.muted = false;
   vid.play()
     .then(() => {
-      console.log("Video playing");
-      // force texture/material refresh
+      console.log("Video playing with audio!");
       const plane = document.getElementById("video-plane");
-      plane.setAttribute("material", "src", "#vid");
+      if (plane) {
+        plane.setAttribute("material", "src", "#vid");
+      }
     })
     .catch(err => console.warn("Video play failed:", err));
 }
+
 
 </script>
 
