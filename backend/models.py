@@ -23,6 +23,6 @@ class Booking(Base):
     check_out = Column(DateTime, nullable=False)
     adults = Column(Integer, default=1)
     children = Column(Integer, default=0)
-    rooms = Column(Integer, default=1)
+    rooms = Column(String, nullable=False)
 
     user = relationship("User", back_populates="bookings")

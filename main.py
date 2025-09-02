@@ -31,7 +31,7 @@ async def home():
         return HTMLResponse(content=f.read(), status_code=200)
 
 
-@app.get("/landing", response_class=HTMLResponse)
+@app.get("/ARLanding", response_class=HTMLResponse)
 async def landing():
     with open("templates/Augmented-reality-landing.html", "r", encoding="utf-8") as f:
         return HTMLResponse(content=f.read(), status_code=200)
@@ -48,6 +48,26 @@ async def main():
     with open("templates/main.html", "r", encoding="utf-8") as f:
         return HTMLResponse(content=f.read(), status_code=200)
 
+
+@app.get("/signup", response_class=HTMLResponse)
+async def signup():
+    with open("templates/signup.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read(), status_code=200)
+    
+@app.get("/login", response_class=HTMLResponse)
+async def login():
+    with open("templates/login.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read(), status_code=200)
+
+@app.get("/booking", response_class=HTMLResponse)
+async def aooking():
+    with open("templates/booking.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read(), status_code=200)
+
+@app.get("/resibo", response_class=HTMLResponse)
+async def resibo():
+    with open("templates/resibo.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read(), status_code=200)
 
 debug = APIRouter()
 
