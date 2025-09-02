@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Booking Page</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        color: #333;
+      }
+
+      .booking-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 550px;
+        padding: 30px 25px;
+      }
+
+      .card h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        font-size: 1.6rem;
+        color: #007bff;
+      }
+
+      .form-group {
+        margin-bottom: 18px;
+      }
+
+      label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      input[type="date"],
+      input[type="number"] {
+        width: 80%;
+        padding: 10px;
+        font-size: 15px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+
+      input:focus {
+        border-color: #007bff;
+      }
+
+      .row {
+        display: flex;
+        gap: 10px;
+      }
+
+      .row .col {
+        flex: 1;
+      }
+
+      .checkbox-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .checkbox-group label {
+        font-weight: normal;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        background: #f8f9fb;
+        padding: 8px 10px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        transition: background 0.3s, border-color 0.3s;
+      }
+
+      .checkbox-group input[type="checkbox"] {
+        transform: scale(1.1);
+      }
+
+      .checkbox-group label:hover {
+        background: #eef5ff;
+        border-color: #007bff;
+      }
+
+      .btn {
+        background: #007bff;
+        border: none;
+        color: white;
+        font-size: 17px;
+        padding: 12px;
+        width: 100%;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
+        margin-top: 12px;
+      }
+
+      .btn:hover {
+        background: #0056b3;
+      }
+
+      .error-message {
+        color: red;
+        font-size: 14px;
+        margin-top: -10px;
+        margin-bottom: 10px;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="booking-container">
+      <div class="card">
+        <h2>Book Your Stay</h2>
+        <form id="bookingForm" method="post" action="/bookings">
+          <div class="row">
+            <div class="form-group col">
+              <label for="checkin">Check-in Date</label>
+              <input type="date" id="checkin" name="check_in" required />
+            </div>
+            <div class="form-group col">
+              <label for="checkout">Check-out Date</label>
+              <input type="date" id="checkout" name="check_out" required />
+            </div>
+          </div>
+          <div id="dateError" class="error-message">
+            Check-out date must be later than check-in date.
+          </div>
+
+          <div class="row">
+            <div class="form-group col">
+              <label for="adults">Adults</label>
+              <input
+                type="number"
+                id="adults"
+                name="adults"
+                min="1"
+                max="10"
+                value="1"
+                required
+              />
+            </div>
+            <div class="form-group col">
+              <label for="kids">Kids</label>
+              <input
+                type="number"
+                id="kids"
+                name="kids"
+                min="0"
+                max="10"
+                value="0"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Select Room(s)</label>
+            <div class="checkbox-group">
+              <label
+                ><input type="checkbox" name="rooms" value="Macau" />
+                Macau</label
+              >
+              <label
+                ><input type="checkbox" name="rooms" value="Morocco" />
+                Morocco</label
+              >
+              <label
+                ><input type="checkbox" name="rooms" value="Paris" />
+                Paris</label
+              >
+              <label
+                ><input type="checkbox" name="rooms" value="Portugal" />
+                Portugal</label
+              >
+              <label
+                ><input type="checkbox" name="rooms" value="Spain" />
+                Spain</label
+              >
+              <label
+                ><input type="checkbox" name="rooms" value="Vietnam" />
+                Vietnam</label
+              >
+            </div>
+          </div>
+          <div id="roomError" class="error-message">
+            Please select at least one room.
+          </div>
+
+          <button type="submit" class="btn">Book Now</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      const bookingForm = document.getElementById("bookingForm");
+      const checkin = document.getElementById("checkin");
+      const checkout = document.getElementById("checkout");
+      const dateError = document.getElementById("dateError");
+      const roomError = document.getElementById("roomError");
+
+      bookingForm.addEventListener("submit", function (e) {
+        let valid = true;
+
+        const checkinDate = new Date(checkin.value);
+        const checkoutDate = new Date(checkout.value);
+
+        if (checkin.value && checkout.value && checkoutDate <= checkinDate) {
+          dateError.style.display = "block";
+          valid = false;
+        } else {
+          dateError.style.display = "none";
+        }
+
+        const rooms = document.querySelectorAll(
+          'input[name="rooms"]:checked'
+        );
+        if (rooms.length === 0) {
+          roomError.style.display = "block";
+          valid = false;
+        } else {
+          roomError.style.display = "none";
+        }
+
+        if (!valid) {
+          e.preventDefault();
+        }
+      });
+
+      const roomCheckboxes = document.querySelectorAll('input[name="rooms"]');
+
+      async function updateRoomAvailability() {
+        const checkinDate = checkin.value;
+        const checkoutDate = checkout.value;
+
+        if (!checkinDate || !checkoutDate) return;
+
+        try {
+          const res = await fetch(
+            `/availability?check_in=${checkinDate}&check_out=${checkoutDate}`
+          );
+          const data = await res.json();
+          const available = data.available_rooms;
+
+          roomCheckboxes.forEach((cb) => {
+            if (available.includes(cb.value)) {
+              cb.disabled = false;
+              cb.parentElement.style.opacity = "1";
+            } else {
+              cb.disabled = true;
+              cb.checked = false;
+              cb.parentElement.style.opacity = "0.5";
+            }
+          });
+        } catch (err) {
+          console.error("Error fetching availability:", err);
+        }
+      }
+
+      checkin.addEventListener("change", updateRoomAvailability);
+      checkout.addEventListener("change", updateRoomAvailability);
+    </script>
+  </body>
+</html>

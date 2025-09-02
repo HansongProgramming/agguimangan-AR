@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signup Form</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        color: #333;
+      }
+
+      .auth-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 500px;
+        padding: 30px 25px;
+      }
+
+      .card h4 {
+        text-align: center;
+        margin-bottom: 25px;
+        font-size: 1.4rem;
+      }
+
+      .card h4 img {
+        vertical-align: middle;
+        margin-right: 8px;
+      }
+
+      .form-group {
+        margin-bottom: 18px;
+      }
+
+      label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"],
+      input[type="phone"] {
+        width: 80%;
+        padding: 10px;
+        font-size: 15px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+
+      input:focus {
+        border-color: #007bff;
+      }
+
+      .row {
+        display: flex;
+        gap: 10px;
+      }
+
+      .row .col {
+        flex: 1;
+      }
+
+      .btn {
+        background: #007bff;
+        border: none;
+        color: white;
+        font-size: 17px;
+        padding: 12px;
+        width: 100%;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .btn:hover {
+        background: #0056b3;
+      }
+
+      .text-muted {
+        font-size: 14px;
+        color: #666;
+      }
+
+      .text-muted a {
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      .text-muted a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-container">
+      <div class="card">
+        <h4>SIGNUP FORM</h4>
+        <form method="post" action="/auth/signup" id="frmSignup">
+          <div class="form-group">
+            <label for="name"
+              >Full Name <span class="text-danger">*</span></label
+            >
+            <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Enter full name"
+              required
+              maxlength="90"
+              pattern="[A-Za-z\s]{3,90}"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email <span class="text-danger">*</span></label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              placeholder="Enter email"
+              required
+              maxlength="45"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="phone_number"
+              >Mobile Number <span class="text-danger">*</span></label
+            >
+            <input
+              type="tel"
+              name="phone_number"
+              id="phone_number"
+              placeholder="11-digit number"
+              required
+              maxlength="11"
+              pattern="\d{11}"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password"
+              >Password <span class="text-danger">*</span></label
+            >
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="Enter password"
+              required
+              minlength="8"
+              maxlength="20"
+            />
+          </div>
+
+          <div class="form-group">
+            <input type="submit" class="btn" value="Sign Up" />
+          </div>
+
+          <div class="form-group">
+            <p class="text-muted text-center">
+              Already have an account? <a href="/login">Login</a>
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

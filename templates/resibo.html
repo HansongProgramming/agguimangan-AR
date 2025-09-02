@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Receipt</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+    }
+
+    .receipt {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 25px 30px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .receipt h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #007bff;
+    }
+
+    .receipt .item {
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+
+    .receipt .label {
+      font-weight: bold;
+    }
+
+    .btn {
+      display: block;
+      margin: 20px auto 0;
+      padding: 10px 18px;
+      background: #007bff;
+      color: #fff;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="receipt" id="receipt">
+    <h2>Booking Receipt</h2>
+    <div id="receiptContent">
+      <p>Loading your booking...</p>
+    </div>
+    <button class="btn" id="downloadBtn">Download Receipt</button>
+  </div>
+
+  <!-- html2canvas library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <script>
+    async function loadReceipt() {
+      try {
+        // Fetch bookings from your backend
+        const response = await fetch("/bookings/me"); // adjust if needed
+        const bookings = await response.json();
+
+        if (!bookings.length) {
+          document.getElementById("receiptContent").innerHTML = "<p>No bookings found.</p>";
+          return;
+        }
+
+        // For simplicity, show the first booking
+        const booking = bookings[0];
+
+        document.getElementById("receiptContent").innerHTML = `
+          <div class="item"><span class="label">Booking ID:</span> ${booking.id}</div>
+          <div class="item"><span class="label">Check-in:</span> ${new Date(booking.check_in).toLocaleDateString()}</div>
+          <div class="item"><span class="label">Check-out:</span> ${new Date(booking.check_out).toLocaleDateString()}</div>
+          <div class="item"><span class="label">Adults:</span> ${booking.adults}</div>
+          <div class="item"><span class="label">Children:</span> ${booking.children}</div>
+          <div class="item"><span class="label">Rooms:</span> ${booking.rooms.join(", ")}</div>
+        `;
+      } catch (error) {
+        document.getElementById("receiptContent").innerHTML = "<p>Error loading booking.</p>";
+        console.error(error);
+      }
+    }
+
+    document.getElementById("downloadBtn").addEventListener("click", () => {
+      const receipt = document.getElementById("receipt");
+      html2canvas(receipt).then(canvas => {
+        const link = document.createElement("a");
+        link.download = "booking_receipt.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+    });
+
+    loadReceipt();
+  </script>
+</body>
+</html>
