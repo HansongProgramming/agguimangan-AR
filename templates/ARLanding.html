@@ -4,27 +4,26 @@
     <meta charset="UTF-8" />
     <title>Agguimangan</title>
 
-    <!-- A-Frame + AR.js NFT build -->
     <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
     <script>
-        window.onload = function() {
-            AFRAME.registerComponent('videohandler', {
-                init: function () {
-                    var marker = this.el;
-                    this.vid = document.querySelector("#vid");
+      window.onload = function() {
+        AFRAME.registerComponent('videohandler', {
+          init: function () {
+            var marker = this.el;
+            this.vid = document.querySelector("#vid1"); 
 
-                    marker.addEventListener('markerFound', function () {
-                        this.vid.play();
-                    }.bind(this));
+            marker.addEventListener('markerFound', function () {
+              this.vid.play();
+            }.bind(this));
 
-                    marker.addEventListener('markerLost', function() {
-                        this.vid.pause();
-                        this.vid.currentTime = 0;
-                    }.bind(this));
-                }
-            });
-        };
+            marker.addEventListener('markerLost', function() {
+              this.vid.pause();
+              this.vid.currentTime = 0;
+            }.bind(this));
+          }
+        });
+      };
     </script>
 
     <style>
@@ -36,8 +35,7 @@
         overflow: hidden;
       }
 
-      /* Hidden video but kept in DOM */
-      #vid {
+      video {
         position: absolute;
         top: 0;
         left: 0;
@@ -46,7 +44,6 @@
         opacity: 0;
       }
 
-      /* Buttons on sides */
       .navButton {
         position: absolute;
         top: 50%;
@@ -144,10 +141,8 @@
       embedded arjs='trackingMethod: best; sourceType: webcam; debugUIEnabled: false;'
     >
       <a-assets>
-        <video src="/static/source/PARAGRAPH 1 VIDEO.mp4"
-          preload="auto" id="vid" response-type="arraybuffer" loop
-          crossorigin webkit-playsinline playsinline autoplay>
-        </video>
+        <video id="vid1" src="/static/source/PARAGRAPH 1 VIDEO.mp4" preload="auto" loop crossorigin playsinline></video>
+        <video id="vid2" src="/static/source/Paragraph 2 Video.mp4" preload="auto" loop crossorigin playsinline></video>
       </a-assets>
 
       <a-nft
@@ -158,7 +153,7 @@
       >
         <a-video
           id="video-plane"
-          src="#vid"
+          src="#vid1"
           position='50 150 -100'
           rotation='-90 0 0'
           width='300'
@@ -170,33 +165,30 @@
     </a-scene>
 
 <script>
-  const vid = document.getElementById("vid");
-  const plane = document.getElementById("video-plane");
-
-  // Video list
-  const videos = [
-    "/static/source/PARAGRAPH 1 VIDEO.mp4",
-    "/static/source/Paragraph 2 Video.mp4"
+  const vids = [
+    document.getElementById("vid1"),
+    document.getElementById("vid2")
   ];
+  const plane = document.getElementById("video-plane");
   let currentIndex = 0;
-
-  vid.addEventListener("loadeddata", () => {
-    console.log("Video loaded! Duration:", vid.duration, "seconds");
-  });
 
   function tapped() {
     document.getElementById("tapButton").style.display = "none";
-    vid.muted = false;
-    vid.play().catch(err => console.warn("Video play failed:", err));
+    vids[currentIndex].muted = false;
+    vids[currentIndex].play().catch(err => console.warn("Video play failed:", err));
   }
 
   function changeVideo(newIndex) {
-    if (newIndex < 0 || newIndex >= videos.length) return;
+    if (newIndex < 0 || newIndex >= vids.length) return;
+
+    vids[currentIndex].pause();
+    vids[currentIndex].currentTime = 0;
+
     currentIndex = newIndex;
-    vid.src = videos[currentIndex];
-    vid.load();
-    vid.play().catch(err => console.warn("Play failed:", err));
-    plane.setAttribute("src", "#vid");
+
+    plane.setAttribute("src", `#vid${currentIndex + 1}`);
+    vids[currentIndex].muted = false;
+    vids[currentIndex].play().catch(err => console.warn("Play failed:", err));
   }
 
   document.getElementById("leftButton").addEventListener("click", () => {
