@@ -7,24 +7,51 @@
     <!-- A-Frame + AR.js NFT build -->
     <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+
     <script>
-        window.onload = function() {
-            AFRAME.registerComponent('videohandler', {
-                init: function () {
-                    var marker = this.el;
-                    this.vid = document.querySelector("#vid");
+      // Register a video handler for markers
+      AFRAME.registerComponent("videohandler", {
+        schema: {
+          vids: { type: "array" },   // array of video sources
+          target: { type: "string" } // CSS selector for <video> element
+        },
+        init: function () {
+          this.currentIndex = 0;
+          this.marker = this.el;
+          this.vid = document.querySelector(this.data.target);
 
-                    marker.addEventListener('markerFound', function () {
-                        this.vid.play();
-                    }.bind(this));
+          this.marker.addEventListener("markerFound", () => {
+            this.playVideo();
+          });
 
-                    marker.addEventListener('markerLost', function() {
-                        this.vid.pause();
-                        this.vid.currentTime = 0;
-                    }.bind(this));
-                }
-            });
-        };
+          this.marker.addEventListener("markerLost", () => {
+            this.vid.pause();
+            this.vid.currentTime = 0;
+          });
+
+          // Register globally
+          window.markerManagers.push(this);
+        },
+        playVideo: function () {
+          this.vid.src = this.data.vids[this.currentIndex];
+          this.vid.load();
+          this.vid.play().catch(err => console.warn("Video play failed:", err));
+        },
+        changeVideo: function (delta) {
+          this.currentIndex += delta;
+          if (this.currentIndex < 0) this.currentIndex = 0;
+          if (this.currentIndex >= this.data.vids.length) {
+            this.currentIndex = this.data.vids.length - 1;
+          }
+          this.playVideo();
+        }
+      });
+
+      // Keep track of active markers
+      window.markerManagers = [];
+      function getActiveMarker() {
+        return window.markerManagers.find(m => m.marker.object3D.visible);
+      }
     </script>
 
     <style>
@@ -36,17 +63,7 @@
         overflow: hidden;
       }
 
-      /* Hidden video but kept in DOM */
-      #vid {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 1px;
-        height: 1px;
-        opacity: 0;
-      }
-
-      /* Buttons on sides */
+      /* Buttons */
       .navButton {
         position: absolute;
         top: 50%;
@@ -63,11 +80,10 @@
       #leftButton { left: 10px; }
       #rightButton { right: 10px; }
 
-      .overlay {
+      .overlay, .overlay2 {
         position: absolute;
-        top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translateX(-50%);
         z-index: 10;
         display: flex;
         justify-content: center;
@@ -80,49 +96,20 @@
         animation: fadeIn 2s forwards;
         color: white;
       }
-      img {
-        width: 40%;
-        height: 20%;
-      }
-      .overlay2 {
-        position: absolute;
-        top: 80%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 10;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: fit-content;
-        background-color: transparent;
-        outline: none;
-        border: none;
-        opacity: 0;
-        animation: fadeIn 2s forwards;
-        animation-delay: 7s;
-        color: white;
-        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
-        font-size: 1.5rem;
-      }
-      @keyframes fadeIn {
-        to { opacity: 1; }
-      }
+      .overlay { top: 50%; }
+      .overlay2 { top: 80%; animation-delay: 7s; }
+      img { width: 40%; height: 20%; }
+      @keyframes fadeIn { to { opacity: 1; } }
+
       .arjs-loader {
-        height: 100%;
-        width: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
+        height: 100%; width: 100%;
+        position: absolute; top: 0; left: 0;
         background-color: rgba(0, 0, 0, 0.8);
-        z-index: 9999;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        z-index: 9999; display: flex;
+        justify-content: center; align-items: center;
       }
       .arjs-loader div {
-        text-align: center;
-        font-size: 1.25em;
-        color: white;
+        text-align: center; font-size: 1.25em; color: white;
       }
     </style>
   </head>
@@ -144,71 +131,70 @@
       embedded arjs='trackingMethod: best; sourceType: webcam; debugUIEnabled: false;'
     >
       <a-assets>
-        <video src="/static/source/PARAGRAPH 1 VIDEO.mp4"
-          preload="auto" id="vid" response-type="arraybuffer" loop
-          crossorigin webkit-playsinline playsinline autoplay>
-        </video>
+        <!-- Each NFT has its own <video> -->
+        <video id="vid-intro" preload="auto" crossorigin webkit-playsinline playsinline></video>
+        <video id="vid-farm" preload="auto" crossorigin webkit-playsinline playsinline></video>
+        <video id="vid-product" preload="auto" crossorigin webkit-playsinline playsinline></video>
+        <video id="vid-about" preload="auto" crossorigin webkit-playsinline playsinline></video>
       </a-assets>
 
+      <!-- Intro marker -->
       <a-nft
-        videohandler
-        type='nft'
-        url='https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/nft/intro'
+        videohandler="vids: [/static/source/PARAGRAPH 1 VIDEO.mp4, /static/source/PARAGRAPH 5 VIDEO.mp4]; target: #vid-intro"
+        type="nft"
+        url="static/nft/intro"
         smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
-        <a-video
-          id="video-plane"
-          src="#vid"
-          position='50 150 -100'
-          rotation='-90 0 0'
-          width='300'
-          height='175'
-        ></a-video>
+        <a-video src="#vid-intro" position="50 150 -100" rotation="-90 0 0" width="300" height="175"></a-video>
+      </a-nft>
+
+      <!-- Farm marker -->
+      <a-nft
+        videohandler="vids: [/static/source/P2-1.mp4, /static/source/P2-2.mp4, /static/source/P2-3.mp4, /static/source/P2-4.mp4]; target: #vid-farm"
+        type="nft"
+        url="static/nft/farm"
+        smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
+        <a-video src="#vid-farm" position="50 150 -100" rotation="-90 0 0" width="300" height="175"></a-video>
+      </a-nft>
+
+      <!-- Product marker -->
+      <a-nft
+        videohandler="vids: [/static/source/PARAGRAPH 4 VIDEO.mp4, /static/source/PARAGRAPH 7 VIDEO.mp4]; target: #vid-product"
+        type="nft"
+        url="static/nft/product"
+        smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
+        <a-video src="#vid-product" position="50 150 -100" rotation="-90 0 0" width="300" height="175"></a-video>
+      </a-nft>
+
+      <!-- About marker -->
+      <a-nft
+        videohandler="vids: [/static/source/PARAGRAPH 8 VIDEO.mp4, /static/source/PARAGRAPH 6 VIDEO.mp4]; target: #vid-about"
+        type="nft"
+        url="static/nft/about"
+        smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
+        <a-video src="#vid-about" position="50 150 -100" rotation="-90 0 0" width="300" height="175"></a-video>
       </a-nft>
 
       <a-entity camera></a-entity>
     </a-scene>
 
-<script>
-  const vid = document.getElementById("vid");
-  const plane = document.getElementById("video-plane");
+    <script>
+      function tapped() {
+        document.getElementById("tapButton").style.display = "none";
+        const active = getActiveMarker();
+        if (active) {
+          active.vid.muted = false;
+          active.vid.play().catch(err => console.warn("Video play failed:", err));
+        }
+      }
 
-  // Video list
-  const videos = [
-    "/static/source/PARAGRAPH 1 VIDEO.mp4",
-    "/static/source/P2-1.mp4",
-    "/static/source/P2-2.mp4",
-    "/static/source/P2-3.mp4",
-    "/static/source/P2-4.mp4"
-  ];
-  let currentIndex = 0;
-
-  vid.addEventListener("loadeddata", () => {
-    console.log("Video loaded! Duration:", vid.duration, "seconds");
-  });
-
-  function tapped() {
-    document.getElementById("tapButton").style.display = "none";
-    vid.muted = false;
-    vid.play().catch(err => console.warn("Video play failed:", err));
-  }
-
-  function changeVideo(newIndex) {
-    if (newIndex < 0 || newIndex >= videos.length) return;
-    currentIndex = newIndex;
-    vid.src = videos[currentIndex];
-    vid.load();
-    vid.play().catch(err => console.warn("Play failed:", err));
-    plane.setAttribute("src", "#vid");
-  }
-
-  document.getElementById("leftButton").addEventListener("click", () => {
-    changeVideo(currentIndex - 1);
-  });
-
-  document.getElementById("rightButton").addEventListener("click", () => {
-    changeVideo(currentIndex + 1);
-  });
-</script>
-
+      document.getElementById("leftButton").addEventListener("click", () => {
+        const active = getActiveMarker();
+        if (active) active.changeVideo(-1);
+      });
+      document.getElementById("rightButton").addEventListener("click", () => {
+        const active = getActiveMarker();
+        if (active) active.changeVideo(1);
+      });
+    </script>
   </body>
 </html>
