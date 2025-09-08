@@ -131,47 +131,42 @@
       embedded arjs='trackingMethod: best; sourceType: webcam; debugUIEnabled: false;'
     >
       <a-assets>
-        <!-- Each NFT has its own <video> -->
         <video id="vid-intro" preload="auto" crossorigin webkit-playsinline playsinline></video>
         <video id="vid-farm" preload="auto" crossorigin webkit-playsinline playsinline></video>
         <video id="vid-product" preload="auto" crossorigin webkit-playsinline playsinline></video>
         <video id="vid-about" preload="auto" crossorigin webkit-playsinline playsinline></video>
       </a-assets>
 
-      <!-- Intro marker -->
       <a-nft
         videohandler="vids: [/static/source/PARAGRAPH 1 VIDEO.mp4, /static/source/PARAGRAPH 5 VIDEO.mp4]; target: #vid-intro"
         type="nft"
         url="static/nft/intro"
         smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
-        <a-video src="#vid-intro" position="50 150 -100" rotation="-90 0 0" width="300" height="175"></a-video>
+        <a-video src="#vid-intro" position="0 0 0" rotation="-90 0 0" width="300" height="175"></a-video>
       </a-nft>
 
-      <!-- Farm marker -->
       <a-nft
         videohandler="vids: [/static/source/P2-1.mp4, /static/source/P2-2.mp4, /static/source/P2-3.mp4, /static/source/P2-4.mp4]; target: #vid-farm"
         type="nft"
         url="static/nft/farm"
         smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
-        <a-video src="#vid-farm" position="50 150 -100" rotation="-90 0 0" width="300" height="175"></a-video>
+        <a-video src="#vid-farm" position="0 0 0" rotation="-90 0 0" width="300" height="175"></a-video>
       </a-nft>
 
-      <!-- Product marker -->
       <a-nft
         videohandler="vids: [/static/source/PARAGRAPH 4 VIDEO.mp4, /static/source/PARAGRAPH 7 VIDEO.mp4]; target: #vid-product"
         type="nft"
         url="static/nft/product"
         smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
-        <a-video src="#vid-product" position="50 150 -100" rotation="-90 0 0" width="300" height="175"></a-video>
+        <a-video src="#vid-product" position="0 0 0" rotation="-90 0 0" width="300" height="175"></a-video>
       </a-nft>
 
-      <!-- About marker -->
       <a-nft
         videohandler="vids: [/static/source/PARAGRAPH 8 VIDEO.mp4, /static/source/PARAGRAPH 6 VIDEO.mp4]; target: #vid-about"
         type="nft"
         url="static/nft/about"
         smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
-        <a-video src="#vid-about" position="50 150 -100" rotation="-90 0 0" width="300" height="175"></a-video>
+        <a-video src="#vid-about" position="0 0 0" rotation="-90 0 0" width="300" height="175"></a-video>
       </a-nft>
 
       <a-entity camera></a-entity>
