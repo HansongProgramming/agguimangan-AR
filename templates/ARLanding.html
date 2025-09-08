@@ -4,45 +4,131 @@
     <meta charset="UTF-8" />
     <title>Agguimangan</title>
 
-    <!-- A-Frame + AR.js -->
-    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@master/dist/aframe-master.min.js"></script>
+    <!-- A-Frame + AR.js NFT build -->
+    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+    <script>
+        window.onload = function() {
+            AFRAME.registerComponent('videohandler', {
+                init: function () {
+                    var marker = this.el;
+                    this.vid = document.querySelector("#vid");
+
+                    marker.addEventListener('markerFound', function () {
+                        this.vid.play();
+                    }.bind(this));
+
+                    marker.addEventListener('markerLost', function() {
+                        this.vid.pause();
+                        this.vid.currentTime = 0;
+                    }.bind(this));
+                }
+            });
+        };
+    </script>
 
     <style>
-      html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; }
-      #vid { position:absolute; top:0; left:0; width:1px; height:1px; opacity:0; }
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
 
+      /* Hidden video but kept in DOM */
+      #vid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+      }
+
+      /* Buttons on sides */
       .navButton {
-        position:absolute; top:50%; transform:translateY(-50%);
-        z-index:20; background:rgba(0,0,0,0.6); border:none; color:white;
-        font-size:2rem; padding:1rem; cursor:pointer; border-radius:10px;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 20;
+        background-color: rgba(0,0,0,0.6);
+        border: none;
+        color: white;
+        font-size: 2rem;
+        padding: 1rem;
+        cursor: pointer;
+        border-radius: 10px;
       }
-      #leftButton{left:10px;} #rightButton{right:10px;}
+      #leftButton { left: 10px; }
+      #rightButton { right: 10px; }
 
-      .overlay, .overlay2 {
-        position:absolute; left:50%; transform:translateX(-50%);
-        z-index:10; background:transparent; border:none; opacity:0;
-        animation:fadeIn 2s forwards; display:flex; justify-content:center; align-items:center;
+      .overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: fit-content;
+        background-color: transparent;
+        outline: none;
+        border: none;
+        opacity: 0;
+        animation: fadeIn 2s forwards;
+        color: white;
       }
-      .overlay { top:50%; }
-      .overlay img { width:40%; height:20%; }
+      img {
+        width: 40%;
+        height: 20%;
+      }
       .overlay2 {
-        top:80%; animation-delay:7s; font-size:1.5rem; color:white;
-        text-shadow:1px 1px 4px rgba(0,0,0,0.8);
+        position: absolute;
+        top: 80%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: fit-content;
+        background-color: transparent;
+        outline: none;
+        border: none;
+        opacity: 0;
+        animation: fadeIn 2s forwards;
+        animation-delay: 7s;
+        color: white;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+        font-size: 1.5rem;
       }
-      @keyframes fadeIn { to{opacity:1;} }
-
+      @keyframes fadeIn {
+        to { opacity: 1; }
+      }
       .arjs-loader {
-        height:100%; width:100%; position:absolute; top:0; left:0;
-        background:rgba(0,0,0,0.8); z-index:9999;
-        display:flex; justify-content:center; align-items:center;
-        color:white; font-size:1.25em;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .arjs-loader div {
+        text-align: center;
+        font-size: 1.25em;
+        color: white;
       }
     </style>
   </head>
   <body>
     <button id="tapButton" onclick="tapped()" class="overlay">
-      <img src="/static/source/tap.png" alt="tap"/>
+      <img src="/static/source/tap.png" alt="tap" />
     </button>
     <button id="finishButton" class="overlay2" onclick="window.location.href='/signup';">
       Tap here to start Booking!
@@ -54,35 +140,30 @@
 
     <a-scene
       vr-mode-ui="enabled: false;"
-      renderer="antialias:true; alpha:true; precision:medium;"
-      embedded
-      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+      renderer='antialias: true; alpha: true; precision: medium;'
+      embedded arjs='trackingMethod: best; sourceType: webcam; debugUIEnabled: false;'
     >
       <a-assets>
-        <video id="vid" preload="auto" loop crossorigin webkit-playsinline playsinline autoplay></video>
+        <video src="/static/source/PARAGRAPH 1 VIDEO.mp4"
+          preload="auto" id="vid" response-type="arraybuffer" loop
+          crossorigin webkit-playsinline playsinline autoplay>
+        </video>
       </a-assets>
 
-      <!-- Intro marker -->
-      <a-nft id="marker-intro" type="nft" url="https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/nft/intro" videohandler></a-nft>
-
-      <!-- Farm marker -->
-      <a-nft id="marker-farm" type="nft" url="https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/nft/farm" videohandler></a-nft>
-
-      <!-- About marker -->
-      <a-nft id="marker-about" type="nft" url="https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/nft/about" videohandler></a-nft>
-
-      <!-- Product marker -->
-      <a-nft id="marker-product" type="nft" url="https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/nft/product" videohandler></a-nft>
-
-      <!-- Video plane -->
-      <a-video
-        id="video-plane"
-        src="#vid"
-        position="50 150 -100"
-        rotation="-90 0 0"
-        width="300"
-        height="175"
-      ></a-video>
+      <a-nft
+        videohandler
+        type='nft'
+        url='https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/nft/intro'
+        smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
+        <a-video
+          id="video-plane"
+          src="#vid"
+          position='50 150 -100'
+          rotation='-90 0 0'
+          width='300'
+          height='175'
+        ></a-video>
+      </a-nft>
 
       <a-entity camera></a-entity>
     </a-scene>
@@ -91,69 +172,43 @@
   const vid = document.getElementById("vid");
   const plane = document.getElementById("video-plane");
 
-  // Playlists by marker
-  const playlists = {
-    "marker-intro": [
-      "/static/source/PARAGRAPH 1 VIDEO.mp4",
-      "/static/source/PARAGRAPH 5 VIDEO.mp4"
-    ],
-    "marker-farm": [
-      "/static/source/P2-1.mp4",
-      "/static/source/P2-2.mp4",
-      "/static/source/P2-3.mp4",
-      "/static/source/P2-4.mp4",
-      "/static/source/PARAGRAPH 3 VIDEO.mp4"
-    ],
-    "marker-about": [
-      "/static/source/PARAGRAPH 4 VIDEO.mp4",
-      "/static/source/PARAGRAPH 7 VIDEO.mp4"
-    ],
-    "marker-product": [
-      "/static/source/PARAGRAPH 8 VIDEO.mp4",
-      "/static/source/PARAGRAPH 6 VIDEO.mp4"
-    ]
-  };
-
-  let currentMarker = null;
+  // Video list
+  const videos = [
+    "/static/source/PARAGRAPH 1 VIDEO.mp4",
+    "/static/source/P2-1.mp4",
+    "/static/source/P2-2.mp4",
+    "/static/source/P2-3.mp4",
+    "/static/source/P2-4.mp4"
+  ];
   let currentIndex = 0;
 
-  function loadVideo(markerId, index=0){
-    if(!playlists[markerId]) return;
-    currentMarker = markerId;
-    currentIndex = index;
-    vid.src = playlists[markerId][index];
+  vid.addEventListener("loadeddata", () => {
+    console.log("Video loaded! Duration:", vid.duration, "seconds");
+  });
+
+  function tapped() {
+    document.getElementById("tapButton").style.display = "none";
+    vid.muted = false;
+    vid.play().catch(err => console.warn("Video play failed:", err));
+  }
+
+  function changeVideo(newIndex) {
+    if (newIndex < 0 || newIndex >= videos.length) return;
+    currentIndex = newIndex;
+    vid.src = videos[currentIndex];
     vid.load();
     vid.play().catch(err => console.warn("Play failed:", err));
     plane.setAttribute("src", "#vid");
   }
 
-  function tapped(){
-    document.getElementById("tapButton").style.display="none";
-    vid.muted=false;
-    vid.play().catch(err => console.warn("Video play failed:", err));
-  }
+  document.getElementById("leftButton").addEventListener("click", () => {
+    changeVideo(currentIndex - 1);
+  });
 
-  function changeVideo(step){
-    if(!currentMarker) return;
-    const list = playlists[currentMarker];
-    let newIndex = currentIndex + step;
-    if(newIndex < 0 || newIndex >= list.length) return;
-    loadVideo(currentMarker, newIndex);
-  }
-
-  // Nav buttons
-  document.getElementById("leftButton").addEventListener("click", ()=>changeVideo(-1));
-  document.getElementById("rightButton").addEventListener("click", ()=>changeVideo(1));
-
-  // Attach marker events
-  Object.keys(playlists).forEach(markerId=>{
-    const marker = document.getElementById(markerId);
-    marker.addEventListener("markerFound", ()=>loadVideo(markerId, 0));
-    marker.addEventListener("markerLost", ()=>{
-      vid.pause(); vid.currentTime=0;
-      currentMarker=null;
-    });
+  document.getElementById("rightButton").addEventListener("click", () => {
+    changeVideo(currentIndex + 1);
   });
 </script>
+
   </body>
 </html>
