@@ -14,13 +14,14 @@
 
       AFRAME.registerComponent("videohandler", {
         schema: {
-          vids: { type: "array" }, // playlist of video sources
-          target: { type: "string" } // CSS selector for shared video element
+          vids: { type: "string" }, // comma-separated list
+          target: { type: "selector" }
         },
         init: function () {
+          this.videos = this.data.vids.split(",").map(v => v.trim());
           this.currentIndex = 0;
           this.marker = this.el;
-          this.vid = document.querySelector(this.data.target);
+          this.vid = this.data.target;
 
           this.marker.addEventListener("markerFound", () => {
             this.playVideo();
@@ -35,7 +36,7 @@
         },
         playVideo: function () {
           if (!this.vid) return;
-          const src = this.data.vids[this.currentIndex];
+          const src = this.videos[this.currentIndex];
           if (this.vid.src !== src) {
             this.vid.src = src;
             this.vid.load();
@@ -45,8 +46,8 @@
         changeVideo: function (delta) {
           this.currentIndex += delta;
           if (this.currentIndex < 0) this.currentIndex = 0;
-          if (this.currentIndex >= this.data.vids.length) {
-            this.currentIndex = this.data.vids.length - 1;
+          if (this.currentIndex >= this.videos.length) {
+            this.currentIndex = this.videos.length - 1;
           }
           this.playVideo();
         }
@@ -58,13 +59,7 @@
     </script>
 
     <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-      }
+      html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
 
       .navButton {
         position: absolute;
@@ -110,9 +105,7 @@
         z-index: 9999; display: flex;
         justify-content: center; align-items: center;
       }
-      .arjs-loader div {
-        text-align: center; font-size: 1.25em; color: white;
-      }
+      .arjs-loader div { text-align: center; font-size: 1.25em; color: white; }
     </style>
   </head>
   <body>
@@ -133,13 +126,12 @@
       embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; maxDetectionRate: 15;"
     >
       <a-assets>
-        <!-- Only ONE shared video -->
         <video id="sharedVid" preload="auto" crossorigin webkit-playsinline playsinline></video>
       </a-assets>
 
       <!-- Intro marker -->
       <a-nft
-        videohandler="vids: [/static/source/intro1.mp4, /static/source/intro2.mp4]; target: #sharedVid"
+        videohandler="vids: https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/intro1.mp4, https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/intro2.mp4; target: #sharedVid"
         type="nft"
         url="static/nft/intro"
         smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
@@ -148,7 +140,7 @@
 
       <!-- Farm marker -->
       <a-nft
-        videohandler="vids: [/static/source/farm1.mp4, /static/source/farm2.mp4, /static/source/farm3.mp4, /static/source/farm4.mp4, /static/source/farm5.mp4]; target: #sharedVid"
+        videohandler="vids: https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/farm1.mp4, https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/farm2.mp4, https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/farm3.mp4, https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/farm4.mp4, https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/farm5.mp4; target: #sharedVid"
         type="nft"
         url="static/nft/farm"
         smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
@@ -157,7 +149,7 @@
 
       <!-- Product marker -->
       <a-nft
-        videohandler="vids: [/static/source/product1.mp4, /static/source/product2.mp4]; target: #sharedVid"
+        videohandler="vids: https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/prodcut1.mp4, https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/product2.mp4; target: #sharedVid"
         type="nft"
         url="static/nft/product"
         smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
@@ -166,7 +158,7 @@
 
       <!-- About marker -->
       <a-nft
-        videohandler="vids: [/static/source/about1.mp4, /static/source/about2.mp4]; target: #sharedVid"
+        videohandler="vids: https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/about1.mp4, https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/about2.mp4; target: #sharedVid"
         type="nft"
         url="static/nft/about"
         smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
