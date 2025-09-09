@@ -34,6 +34,7 @@ async def home():
 @app.get("/ARLanding", response_class=HTMLResponse)
 async def landing():
     with open("templates/ARLanding.html", "r", encoding="utf-8") as f:
+
         return HTMLResponse(content=f.read(), status_code=200)
 
 
