@@ -33,8 +33,11 @@
           window.markerManagers.push(this);
         },
         playVideo: function () {
-          this.vid.src = this.data.vids[this.currentIndex];
-          this.vid.load();
+          if (!this.vid) return;
+          if (this.vid.src !== this.data.vids[this.currentIndex]) {
+            this.vid.src = this.data.vids[this.currentIndex];
+            this.vid.load();
+          }
           this.vid.play().catch(err => console.warn("Video play failed:", err));
         },
         changeVideo: function (delta) {
@@ -127,8 +130,8 @@
 
     <a-scene
       vr-mode-ui="enabled: false;"
-      renderer='antialias: true; alpha: true; precision: medium;'
-      embedded arjs='trackingMethod: best; sourceType: webcam; debugUIEnabled: false;'
+      renderer="antialias: false; alpha: true; precision: low; logarithmicDepthBuffer: true;"
+      embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; maxDetectionRate: 15;"
     >
       <a-assets>
         <video id="vid-intro" preload="auto" crossorigin webkit-playsinline playsinline></video>
