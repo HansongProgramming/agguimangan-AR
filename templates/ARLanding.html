@@ -4,17 +4,15 @@
     <meta charset="UTF-8" />
     <title>Agguimangan</title>
 
-    <!-- A-Frame + AR.js NFT build -->
     <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
 
     <script>
-      // Global marker manager list
       window.markerManagers = [];
 
       AFRAME.registerComponent("videohandler", {
         schema: {
-          vids: { type: "string" }, // comma-separated list
+          vids: { type: "string" }, 
           target: { type: "selector" }
         },
         init: function () {
@@ -129,7 +127,7 @@
         <video id="sharedVid" preload="auto" crossorigin webkit-playsinline playsinline></video>
       </a-assets>
 
-      <!-- Intro marker -->
+      <a-entity look-at="[camera]">
       <a-nft
         videohandler="vids: https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/intro1.mp4, https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/intro2.mp4; target: #sharedVid"
         type="nft"
@@ -137,8 +135,9 @@
         smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
         <a-video src="#sharedVid" position="0 87.5 0" rotation="-90 0 0" width="300" height="175"></a-video>
       </a-nft>
+      </a-entity>
 
-      <!-- Farm marker -->
+      <a-entity look-at="[camera]">
       <a-nft
         videohandler="vids: https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/farm1.mp4, https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/farm2.mp4, https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/farm3.mp4, https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/farm4.mp4, https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/farm5.mp4; target: #sharedVid"
         type="nft"
@@ -146,8 +145,9 @@
         smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
         <a-video src="#sharedVid" position="0 0 0" rotation="-90 0 0" width="300" height="175"></a-video>
       </a-nft>
+      </a-entity>
 
-      <!-- Product marker -->
+      <a-entity look-at="[camera]">
       <a-nft
         videohandler="vids: https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/prodcut1.mp4, https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/product2.mp4; target: #sharedVid"
         type="nft"
@@ -155,8 +155,11 @@
         smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
         <a-video src="#sharedVid" position="0 0 0" rotation="-90 0 0" width="300" height="175"></a-video>
       </a-nft>
+      </a-entity>
 
       <!-- About marker -->
+             <a-entity look-at="[camera]">
+
       <a-nft
         videohandler="vids: https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/about1.mp4, https://raw.githack.com/HansongProgramming/agguimangan-AR/main/static/source/about2.mp4; target: #sharedVid"
         type="nft"
@@ -164,6 +167,8 @@
         smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
         <a-video src="#sharedVid" position="0 0 0" rotation="-90 0 0" width="300" height="175"></a-video>
       </a-nft>
+            </a-entity>
+
 
       <a-entity camera></a-entity>
     </a-scene>
