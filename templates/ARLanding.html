@@ -1,198 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Agguimangan</title>
+<head>
+  <meta charset="UTF-8" />
+  <title>Agguimangan</title>
 
-    <!-- A-Frame + AR.js NFT build -->
-    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+  <!-- A-Frame + AR.js NFT build -->
+  <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
 
-    <script>
-      // Register a video handler for markers
-      AFRAME.registerComponent("videohandler", {
-        schema: {
-          vids: { type: "array" },   // array of video sources
-          target: { type: "string" } // CSS selector for <video> element
-        },
-        init: function () {
-          this.currentIndex = 0;
-          this.marker = this.el;
-          this.vid = document.querySelector(this.data.target);
+  <script>
+    // Video handler
+    AFRAME.registerComponent("videohandler", {
+      schema: {
+        vids: { type: "array" }
+      },
+      init: function () {
+        this.currentIndex = 0;
+        this.marker = this.el;
 
-          this.marker.addEventListener("markerFound", () => {
-            this.playVideo();
-          });
+        // Create video element dynamically (per marker)
+        this.vid = document.createElement("video");
+        this.vid.setAttribute("webkit-playsinline", "");
+        this.vid.setAttribute("playsinline", "");
+        this.vid.setAttribute("crossorigin", "anonymous");
+        this.vid.muted = true; // unmute later on tap
+        document.body.appendChild(this.vid);
 
-          this.marker.addEventListener("markerLost", () => {
-            this.vid.pause();
-            this.vid.currentTime = 0;
-          });
-
-          // Register globally
-          window.markerManagers.push(this);
-        },
-        playVideo: function () {
-          if (!this.vid) return;
-          if (this.vid.src !== this.data.vids[this.currentIndex]) {
-            this.vid.src = this.data.vids[this.currentIndex];
-            this.vid.load();
-          }
-          this.vid.play().catch(err => console.warn("Video play failed:", err));
-        },
-        changeVideo: function (delta) {
-          this.currentIndex += delta;
-          if (this.currentIndex < 0) this.currentIndex = 0;
-          if (this.currentIndex >= this.data.vids.length) {
-            this.currentIndex = this.data.vids.length - 1;
-          }
+        this.marker.addEventListener("markerFound", () => {
           this.playVideo();
+        });
+
+        this.marker.addEventListener("markerLost", () => {
+          this.stopVideo();
+        });
+
+        window.markerManagers.push(this);
+      },
+      playVideo: function () {
+        if (!this.vid.src || this.vid.src !== this.data.vids[this.currentIndex]) {
+          this.vid.src = this.data.vids[this.currentIndex];
+          this.vid.load();
         }
-      });
-
-      // Keep track of active markers
-      window.markerManagers = [];
-      function getActiveMarker() {
-        return window.markerManagers.find(m => m.marker.object3D.visible);
+        this.el.querySelector("a-video").setAttribute("src", this.vid);
+        this.vid.play().catch(err => console.warn("Play failed:", err));
+      },
+      stopVideo: function () {
+        this.vid.pause();
+        this.vid.removeAttribute("src"); // release memory
+        this.el.querySelector("a-video").setAttribute("src", "");
+      },
+      changeVideo: function (delta) {
+        this.currentIndex = Math.max(
+          0,
+          Math.min(this.currentIndex + delta, this.data.vids.length - 1)
+        );
+        this.playVideo();
       }
-    </script>
+    });
 
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
+    // Active marker helper
+    window.markerManagers = [];
+    function getActiveMarker() {
+      return window.markerManagers.find(m => m.marker.object3D.visible);
+    }
+  </script>
+
+  <style>
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+    .navButton {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      z-index: 20; background: rgba(0,0,0,0.6); border: none; color: white;
+      font-size: 2rem; padding: 1rem; cursor: pointer; border-radius: 10px;
+    }
+    #leftButton { left: 10px; }
+    #rightButton { right: 10px; }
+    .overlay, .overlay2 {
+      position: absolute; left: 50%; transform: translateX(-50%);
+      z-index: 10; display: flex; justify-content: center; align-items: center;
+      background: transparent; border: none; opacity: 0; animation: fadeIn 2s forwards;
+    }
+    .overlay { top: 50%; }
+    .overlay2 { top: 80%; animation-delay: 7s; }
+    img { width: 40%; height: 20%; }
+    @keyframes fadeIn { to { opacity: 1; } }
+    .arjs-loader {
+      height: 100%; width: 100%; position: absolute; top: 0; left: 0;
+      background: rgba(0,0,0,0.8); z-index: 9999; display: flex;
+      justify-content: center; align-items: center; color: white;
+    }
+  </style>
+</head>
+<body>
+  <button id="tapButton" onclick="tapped()" class="overlay">
+    <img src="/static/source/tap.png" alt="tap" />
+  </button>
+  <button id="finishButton" class="overlay2" onclick="window.location.href='/signup';">
+    Tap here to start Booking!
+  </button>
+  <button id="leftButton" class="navButton">&#9664;</button>
+  <button id="rightButton" class="navButton">&#9654;</button>
+
+  <div class="arjs-loader"><div>Loading, please wait...</div></div>
+
+  <a-scene
+    vr-mode-ui="enabled: false;"
+    renderer="antialias: false; alpha: true; precision: low; logarithmicDepthBuffer: true;"
+    embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; maxDetectionRate: 15;"
+  >
+    <a-nft
+      videohandler="vids: [/static/source/intro1.mp4, /static/source/intro2.mp4]"
+      type="nft" url="static/nft/intro"
+      smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="3">
+      <a-video position="0 0 0" rotation="-90 0 0" width="300" height="175"></a-video>
+    </a-nft>
+
+    <a-nft
+      videohandler="vids: [/static/source/farm1.mp4, /static/source/farm2.mp4, /static/source/farm3.mp4]"
+      type="nft" url="static/nft/farm"
+      smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="3">
+      <a-video position="0 0 0" rotation="-90 0 0" width="300" height="175"></a-video>
+    </a-nft>
+
+    <a-nft
+      videohandler="vids: [/static/source/product1.mp4, /static/source/product2.mp4]"
+      type="nft" url="static/nft/product"
+      smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="3">
+      <a-video position="0 0 0" rotation="-90 0 0" width="300" height="175"></a-video>
+    </a-nft>
+
+    <a-nft
+      videohandler="vids: [/static/source/about1.mp4, /static/source/about2.mp4]"
+      type="nft" url="static/nft/about"
+      smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="3">
+      <a-video position="0 0 0" rotation="-90 0 0" width="300" height="175"></a-video>
+    </a-nft>
+
+    <a-entity camera></a-entity>
+  </a-scene>
+
+  <script>
+    function tapped() {
+      document.getElementById("tapButton").style.display = "none";
+      const active = getActiveMarker();
+      if (active) {
+        active.vid.muted = false;
+        active.vid.play().catch(err => console.warn("Unmute play failed:", err));
       }
+    }
 
-      /* Buttons */
-      .navButton {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 20;
-        background-color: rgba(0,0,0,0.6);
-        border: none;
-        color: white;
-        font-size: 2rem;
-        padding: 1rem;
-        cursor: pointer;
-        border-radius: 10px;
-      }
-      #leftButton { left: 10px; }
-      #rightButton { right: 10px; }
+    document.getElementById("leftButton").addEventListener("click", () => {
+      const active = getActiveMarker();
+      if (active) active.changeVideo(-1);
+    });
+    document.getElementById("rightButton").addEventListener("click", () => {
+      const active = getActiveMarker();
+      if (active) active.changeVideo(1);
+    });
 
-      .overlay, .overlay2 {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 10;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: fit-content;
-        background-color: transparent;
-        outline: none;
-        border: none;
-        opacity: 0;
-        animation: fadeIn 2s forwards;
-        color: white;
-      }
-      .overlay { top: 50%; }
-      .overlay2 { top: 80%; animation-delay: 7s; }
-      img { width: 40%; height: 20%; }
-      @keyframes fadeIn { to { opacity: 1; } }
-
-      .arjs-loader {
-        height: 100%; width: 100%;
-        position: absolute; top: 0; left: 0;
-        background-color: rgba(0, 0, 0, 0.8);
-        z-index: 9999; display: flex;
-        justify-content: center; align-items: center;
-      }
-      .arjs-loader div {
-        text-align: center; font-size: 1.25em; color: white;
-      }
-    </style>
-  </head>
-  <body>
-    <button id="tapButton" onclick="tapped()" class="overlay">
-      <img src="/static/source/tap.png" alt="tap" />
-    </button>
-    <button id="finishButton" class="overlay2" onclick="window.location.href='/signup';">
-      Tap here to start Booking!
-    </button>
-    <button id="leftButton" class="navButton">&#9664;</button>
-    <button id="rightButton" class="navButton">&#9654;</button>
-
-    <div class="arjs-loader"><div>Loading, please wait...</div></div>
-
-    <a-scene
-      vr-mode-ui="enabled: false;"
-      renderer="antialias: false; alpha: true; precision: low; logarithmicDepthBuffer: true;"
-      embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; maxDetectionRate: 15;"
-    >
-      <a-assets>
-        <video id="vid-intro" preload="auto" crossorigin webkit-playsinline playsinline></video>
-        <video id="vid-farm" preload="auto" crossorigin webkit-playsinline playsinline></video>
-        <video id="vid-product" preload="auto" crossorigin webkit-playsinline playsinline></video>
-        <video id="vid-about" preload="auto" crossorigin webkit-playsinline playsinline></video>
-      </a-assets>
-
-      <a-nft
-        videohandler="vids: [/static/source/intro1.mp4, /static/source/intro2.mp4]; target: #vid-intro"
-        type="nft"
-        url="static/nft/intro"
-        smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
-        <a-video src="#vid-intro" position="0 0 0" rotation="-90 0 0" width="300" height="175"></a-video>
-      </a-nft>
-
-      <a-nft
-        videohandler="vids: [/static/source/farm1.mp4, /static/source/farm2.mp4, /static/source/farm3.mp4, /static/source/farm4.mp4, /static/source/farm5.mp4]; target: #vid-farm"
-        type="nft"
-        url="static/nft/farm"
-        smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
-        <a-video src="#vid-farm" position="0 0 0" rotation="-90 0 0" width="300" height="175"></a-video>
-      </a-nft>
-
-      <a-nft
-        videohandler="vids: [/static/source/product1.mp4, /static/source/product2.mp4]; target: #vid-product"
-        type="nft"
-        url="static/nft/product"
-        smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
-        <a-video src="#vid-product" position="0 0 0" rotation="-90 0 0" width="300" height="175"></a-video>
-      </a-nft>
-
-      <a-nft
-        videohandler="vids: [/static/source/about1.mp4, /static/source/about2.mp4]; target: #vid-about"
-        type="nft"
-        url="static/nft/about"
-        smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
-        <a-video src="#vid-about" position="0 0 0" rotation="-90 0 0" width="300" height="175"></a-video>
-      </a-nft>
-
-      <a-entity camera></a-entity>
-    </a-scene>
-
-    <script>
-      function tapped() {
-        document.getElementById("tapButton").style.display = "none";
-        const active = getActiveMarker();
-        if (active) {
-          active.vid.muted = false;
-          active.vid.play().catch(err => console.warn("Video play failed:", err));
-        }
-      }
-
-      document.getElementById("leftButton").addEventListener("click", () => {
-        const active = getActiveMarker();
-        if (active) active.changeVideo(-1);
-      });
-      document.getElementById("rightButton").addEventListener("click", () => {
-        const active = getActiveMarker();
-        if (active) active.changeVideo(1);
-      });
-    </script>
-  </body>
+    // Hide loader when scene is ready
+    document.querySelector("a-scene").addEventListener("loaded", () => {
+      document.querySelector(".arjs-loader").style.display = "none";
+    });
+  </script>
+</body>
 </html>
