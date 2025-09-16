@@ -72,9 +72,12 @@ async def signup(
 # Login with Cookie
 # -------------------------
 @router.post("/login")
-async def login(user: UserLogin, db: AsyncSession = Depends(get_db)):
-    # Lookup user
-    result = await db.execute(select(models.User).where(models.User.email == user.email))
+async def login(
+    email: str = Form(...),
+    password: str = Form(...),
+    db: AsyncSession = Depends(get_db),
+):
+    result = await db.execute(select(models.User).where(models.User.email == email))
     db_user = result.scalars().first()
 
     if not db_user or not auth.verify_password(user.password, db_user.password_hash):
@@ -87,7 +90,7 @@ async def login(user: UserLogin, db: AsyncSession = Depends(get_db)):
     token = auth.create_access_token({"sub": db_user.email})
 
     # Redirect & set HttpOnly cookie
-    response = RedirectResponse(url="/bookings", status_code=303)
+    response = RedirectResponse(url="/booking", status_code=303)
     response.set_cookie(
         key="access_token",
         value=token,  # again, no Bearer prefix
