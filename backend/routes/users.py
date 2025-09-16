@@ -90,7 +90,7 @@ async def login(
     token = auth.create_access_token({"sub": db_user.email})
 
     # Redirect & set HttpOnly cookie
-    response = RedirectResponse(url="/booking", status_code=303)
+    response = RedirectResponse(url="/main", status_code=303)
     response.set_cookie(
         key="access_token",
         value=token,  # again, no Bearer prefix
