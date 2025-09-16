@@ -80,7 +80,7 @@ async def login(
     result = await db.execute(select(models.User).where(models.User.email == email))
     db_user = result.scalars().first()
 
-    if not db_user or not auth.verify_password(user.password, db_user.password_hash):
+    if not db_user or not auth.verify_password(password, db_user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials"
