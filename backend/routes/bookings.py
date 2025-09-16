@@ -29,7 +29,7 @@ class BookingOut(BaseModel):
     rooms: list[str]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
     @validator("rooms", pre=True)
     def split_rooms(cls, v):
