@@ -38,9 +38,15 @@
       font-weight: bold;
     }
 
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
     .btn {
-      display: block;
-      margin: 20px auto 0;
+      flex: 1;
       padding: 10px 18px;
       background: #007bff;
       color: #fff;
@@ -49,6 +55,7 @@
       border-radius: 6px;
       cursor: pointer;
       transition: background 0.3s;
+      text-align: center;
     }
 
     .btn:hover {
@@ -62,7 +69,10 @@
     <div id="receiptContent">
       <p>Loading your booking...</p>
     </div>
-    <button class="btn" id="downloadBtn">Download Receipt</button>
+    <div class="btn-container">
+      <button class="btn" id="downloadBtn">Download Receipt</button>
+      <button class="btn" id="mainBtn">Back to Main</button>
+    </div>
   </div>
 
   <!-- html2canvas library -->
@@ -105,6 +115,11 @@
         link.href = canvas.toDataURL("image/png");
         link.click();
       });
+    });
+
+    // Redirect to /main
+    document.getElementById("mainBtn").addEventListener("click", () => {
+      window.location.href = "/main";
     });
 
     loadReceipt();
